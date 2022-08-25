@@ -303,7 +303,7 @@ func _create_class_from_project_settings(setting_name: String, default_path: Str
 		class_path = default_path
 	return load(class_path).new()
 
-func set_network_adaptor(_network_adaptor: NetworkAdaptor) -> void:
+func set_network_adaptor(_network_adaptor: Object) -> void:
 	assert(not started, "Changing the network adaptor after SyncManager has started will probably break everything")
 	
 	if network_adaptor != null:
@@ -334,7 +334,7 @@ func set_message_serializer(_message_serializer: Object) -> void:
 	assert(not started, "Changing the message serializer after SyncManager has started will probably break everything")
 	message_serializer = _message_serializer
 
-func set_hash_serializer(_hash_serializer: HashSerializer) -> void:
+func set_hash_serializer(_hash_serializer: Object) -> void:
 	assert(not started, "Changing the hash serializer after SyncManager has started will probably break everything")
 	hash_serializer = _hash_serializer
 
