@@ -1,0 +1,12 @@
+# Ignore some files when exports so installing via AssetLib is easier.
+/.gitattributes		export-ignore
+/.gitignore			export-ignore
+/README.md			export-ignore
+/LICENSE.txt		export-ignore
+/project.godot		export-ignore
+/default_env.tres	export-ignore
+/icon.png			export-ignore
+/icon.png.import	export-ignore
+/assets/			export-ignore
+/demo/				export-ignore
+/addons/multirun/	export-ignore

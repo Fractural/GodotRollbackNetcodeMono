@@ -1,0 +1,162 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://addons/godot-rollback-netcode/log_inspector/FrameViewer.gd" type="Script" id=1]
+[ext_resource path="res://addons/godot-rollback-netcode/log_inspector/FrameDataGraph.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/godot-rollback-netcode/log_inspector/FrameViewerSettingsDialog.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/godot-rollback-netcode/log_inspector/FrameDataGrid.tscn" type="PackedScene" id=4]
+
+[node name="FrameViewer" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 1280.0
+margin_bottom = 38.0
+rect_min_size = Vector2( 0, 34 )
+
+[node name="TimeLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_top = 12.0
+margin_right = 64.0
+margin_bottom = 26.0
+text = "Time (ms)"
+
+[node name="Time" type="SpinBox" parent="VBoxContainer/HBoxContainer"]
+margin_left = 68.0
+margin_top = 7.0
+margin_right = 142.0
+margin_bottom = 31.0
+size_flags_vertical = 4
+max_value = 0.0
+rounded = true
+
+[node name="StartButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 146.0
+margin_top = 9.0
+margin_right = 187.0
+margin_bottom = 29.0
+size_flags_vertical = 4
+text = "Start"
+
+[node name="PreviousFrameButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 191.0
+margin_top = 9.0
+margin_right = 319.0
+margin_bottom = 29.0
+size_flags_vertical = 4
+text = "<< Previous frame"
+
+[node name="NextFrameButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 323.0
+margin_top = 9.0
+margin_right = 426.0
+margin_bottom = 29.0
+size_flags_vertical = 4
+text = "Next frame >>"
+
+[node name="EndButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 430.0
+margin_top = 9.0
+margin_right = 465.0
+margin_bottom = 29.0
+size_flags_vertical = 4
+text = "End"
+
+[node name="SeekOnReplayPeerField" type="CheckBox" parent="VBoxContainer/HBoxContainer"]
+margin_left = 469.0
+margin_right = 654.0
+margin_bottom = 38.0
+text = "Seek only on replay peer"
+
+[node name="Separator1" type="Control" parent="VBoxContainer/HBoxContainer"]
+margin_left = 658.0
+margin_right = 810.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ReplayContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
+margin_left = 814.0
+margin_right = 1056.0
+margin_bottom = 38.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ReplayContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 235.0
+margin_bottom = 31.0
+
+[node name="ReplayToCurrentButton" type="Button" parent="VBoxContainer/HBoxContainer/ReplayContainer/HBoxContainer"]
+margin_top = 2.0
+margin_right = 166.0
+margin_bottom = 22.0
+size_flags_vertical = 4
+text = "Replay to Current Frame"
+
+[node name="AutoReplayToCurrentField" type="CheckBox" parent="VBoxContainer/HBoxContainer/ReplayContainer/HBoxContainer"]
+margin_left = 170.0
+margin_right = 228.0
+margin_bottom = 24.0
+size_flags_vertical = 4
+text = "Auto"
+
+[node name="Separator2" type="Control" parent="VBoxContainer/HBoxContainer"]
+margin_left = 1060.0
+margin_right = 1213.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SettingsButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 1217.0
+margin_top = 9.0
+margin_right = 1280.0
+margin_bottom = 29.0
+size_flags_vertical = 4
+text = "Settings"
+
+[node name="VSplitContainer" type="VSplitContainer" parent="VBoxContainer"]
+margin_top = 42.0
+margin_right = 1280.0
+margin_bottom = 720.0
+size_flags_vertical = 3
+
+[node name="DataGraph" parent="VBoxContainer/VSplitContainer" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 1280.0
+margin_bottom = 333.0
+
+[node name="DataGrid" parent="VBoxContainer/VSplitContainer" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 345.0
+margin_right = 1280.0
+margin_bottom = 678.0
+size_flags_vertical = 3
+
+[node name="SettingsDialog" parent="." instance=ExtResource( 3 )]
+
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/Time" to="." method="_on_Time_value_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/StartButton" to="." method="_on_StartButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/PreviousFrameButton" to="." method="_on_PreviousFrameButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/NextFrameButton" to="." method="_on_NextFrameButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/EndButton" to="." method="_on_EndButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ReplayContainer/HBoxContainer/ReplayToCurrentButton" to="." method="_on_ReplayToCurrentButton_pressed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/ReplayContainer/HBoxContainer/AutoReplayToCurrentField" to="." method="_on_AutoReplayToCurrentField_toggled"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/SettingsButton" to="." method="_on_SettingsButton_pressed"]
+[connection signal="cursor_time_changed" from="VBoxContainer/VSplitContainer/DataGraph" to="." method="_on_DataGraph_cursor_time_changed"]

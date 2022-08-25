@@ -1,0 +1,157 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://demo/gdscript/Main.gd" type="Script" id=1]
+[ext_resource path="res://demo/gdscript/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/monogram_extended.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+size = 42
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=2]
+font_data = ExtResource( 3 )
+
+[node name="Main" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MainMenu" type="HBoxContainer" parent="CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -87.5
+margin_top = -20.0
+margin_right = 87.5
+margin_bottom = 20.0
+
+[node name="LocalButton" type="Button" parent="CanvasLayer/MainMenu"]
+margin_right = 86.0
+margin_bottom = 40.0
+text = "Play Locally"
+
+[node name="OnlineButton" type="Button" parent="CanvasLayer/MainMenu"]
+margin_left = 90.0
+margin_right = 175.0
+margin_bottom = 40.0
+text = "Play Online"
+
+[node name="ConnectionPanel" type="WindowDialog" parent="CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -189.0
+margin_top = -45.0
+margin_right = 189.0
+margin_bottom = 45.0
+window_title = "Online"
+
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/ConnectionPanel"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 371.0
+margin_bottom = 83.0
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HostLabel" type="Label" parent="CanvasLayer/ConnectionPanel/GridContainer"]
+margin_top = 5.0
+margin_right = 180.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Host"
+
+[node name="HostField" type="LineEdit" parent="CanvasLayer/ConnectionPanel/GridContainer"]
+margin_left = 184.0
+margin_right = 364.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "127.0.0.1"
+align = 2
+
+[node name="PortLabel" type="Label" parent="CanvasLayer/ConnectionPanel/GridContainer"]
+margin_top = 33.0
+margin_right = 180.0
+margin_bottom = 47.0
+size_flags_horizontal = 3
+text = "Port"
+
+[node name="PortField" type="LineEdit" parent="CanvasLayer/ConnectionPanel/GridContainer"]
+margin_left = 184.0
+margin_top = 28.0
+margin_right = 364.0
+margin_bottom = 52.0
+size_flags_horizontal = 3
+text = "9999"
+align = 2
+
+[node name="ServerButton" type="Button" parent="CanvasLayer/ConnectionPanel/GridContainer"]
+margin_top = 56.0
+margin_right = 180.0
+margin_bottom = 76.0
+size_flags_horizontal = 3
+text = "Server"
+
+[node name="ClientButton" type="Button" parent="CanvasLayer/ConnectionPanel/GridContainer"]
+margin_left = 184.0
+margin_top = 56.0
+margin_right = 364.0
+margin_bottom = 76.0
+size_flags_horizontal = 3
+text = "Client"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MessageLabel" type="Label" parent="CanvasLayer"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -275.0
+margin_right = 276.0
+margin_bottom = 124.0
+custom_fonts/font = SubResource( 1 )
+align = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SyncLostLabel" type="Label" parent="CanvasLayer"]
+visible = false
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -106.0
+margin_bottom = 14.0
+custom_fonts/font = SubResource( 2 )
+text = "Regaining sync..."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ResetButton" type="Button" parent="CanvasLayer"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -48.0
+margin_top = -20.0
+text = "RESET"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ServerPlayer" parent="." instance=ExtResource( 2 )]
+position = Vector2( 230, 367 )
+
+[node name="ClientPlayer" parent="." instance=ExtResource( 2 )]
+position = Vector2( 771, 364 )
+
+[connection signal="pressed" from="CanvasLayer/MainMenu/LocalButton" to="." method="_on_LocalButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainMenu/OnlineButton" to="." method="_on_OnlineButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/ConnectionPanel/GridContainer/ServerButton" to="." method="_on_ServerButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/ConnectionPanel/GridContainer/ClientButton" to="." method="_on_ClientButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/ResetButton" to="." method="_on_ResetButton_pressed"]
