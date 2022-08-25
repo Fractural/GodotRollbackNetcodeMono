@@ -1,22 +1,46 @@
 ﻿using GDDictionary = Godot.Collections.Dictionary;
+using GDArray = Godot.Collections.Array;
 
 namespace GodotRollbackNetcode
 {
     public interface IHashSerializer
     {
-        GDDictionary Serialize(GDDictionary value);
+        GDDictionary Serialize(object value);
 
-        GDDictionary Unserialize(GDDictionary value);
+        GDDictionary Unserialize(object value);
     }
 
     public abstract class BaseHashSerializer : Godot.Reference, IHashSerializer
     {
-        private GDDictionary serialize(GDDictionary value) => Serialize(value);
+        private GDDictionary serialize(object value) => Serialize(value);
 
-        public abstract GDDictionary Serialize(GDDictionary value);
+        public virtual GDDictionary Serialize(object value)
+        {
+            if (value is GDDictionary)
+                return
+        }
 
-        private GDDictionary unserialize(GDDictionary value) => Unserialize(value);
+        protected virtual GDDictionary SerializeDictionary(GDDictionary value)
+        {
+            var serialized = new GDDictionary();
+            foreach (var key in value.Keys)
+                serialized[key] = serialize(value[key]);
+            return serialized;
+        }
 
-        public abstract GDDictionary Unserialize(GDDictionary value);
+        protected virtual GDArray SerializeArray(GDArray array)
+        {
+            var serialized = new GDArray();
+            foreach (var item in array)
+                serialized.Add(serialize(item));
+            return serialized;
+        }
+
+        private GDDictionary unserialize(object value) => Unserialize(value);
+
+        public virtual GDDictionary Unserialize(object value)
+        {
+
+        }
     }
 }

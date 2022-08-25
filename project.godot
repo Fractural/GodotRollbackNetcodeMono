@@ -32,7 +32,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Godot Rollback Netcode Demo"
+config/name="GodotRollbackNetcodeMono"
 run/main_scene="res://demo/mono/MonoMain.tscn"
 config/icon="res://icon.png"
 

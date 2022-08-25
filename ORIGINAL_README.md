@@ -1,8 +1,6 @@
 Godot Rollback Netcode 
 ======================
 
-![Logo](icon.png)
-
 This is an addon for implementing rollback and prediction netcode in the Godot
 game engine.
 
