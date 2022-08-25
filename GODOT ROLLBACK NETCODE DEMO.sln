@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32630.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Godot Rollback Netcode Demo", "Godot Rollback Netcode Demo.csproj", "{709F06F1-8C82-47EB-9292-1E69EA94AA1B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		ExportDebug|Any CPU = ExportDebug|Any CPU
+		ExportRelease|Any CPU = ExportRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{709F06F1-8C82-47EB-9292-1E69EA94AA1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{709F06F1-8C82-47EB-9292-1E69EA94AA1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{709F06F1-8C82-47EB-9292-1E69EA94AA1B}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{709F06F1-8C82-47EB-9292-1E69EA94AA1B}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{709F06F1-8C82-47EB-9292-1E69EA94AA1B}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{709F06F1-8C82-47EB-9292-1E69EA94AA1B}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9374A9F6-EA20-48F4-8B7A-354FA9A76612}
+	EndGlobalSection
+EndGlobal

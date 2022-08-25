@@ -7,8 +7,8 @@ namespace GodotRollbackNetcode
         public HashSerializerWrapper() { }
         public HashSerializerWrapper(Godot.Object source) : base(source) { }
 
-        public GDDictionary Serialize(GDDictionary value) => (GDDictionary)Source.Call("serialize", value);
+        public object Serialize(object value) => (GDDictionary)Source.Call("serialize", value);
 
-        public GDDictionary Unserialize(GDDictionary value) => (GDDictionary)Source.Call("unserialize", value);
+        public object Unserialize(object value) => (GDDictionary)Source.Call("unserialize", value);
     }
 }

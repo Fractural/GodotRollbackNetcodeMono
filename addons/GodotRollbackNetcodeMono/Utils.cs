@@ -1,7 +1,7 @@
 ﻿using Godot;
 using System;
 using System.Reflection;
-using Dictionary = Godot.Collections.Dictionary;
+using GDDictionary = Godot.Collections.Dictionary;
 
 namespace GodotRollbackNetcode
 {
@@ -17,16 +17,30 @@ namespace GodotRollbackNetcode
             return node.GetNode(path).AsWrapper<T>();
         }
 
-        public static T Get<T>(this Dictionary dictionary, object key, T defaultReturn = default)
+        public static T Get<T>(this GDDictionary dictionary, object key, T defaultReturn = default)
         {
             if (dictionary.Contains(key))
                 return (T)dictionary[key];
             return defaultReturn;
         }
 
-        public static Dictionary ToGodotDict(this object obj)
+        public static T Get<T>(this GDDictionary dictionary, string key, T defaultReturn = default)
         {
-            Dictionary dict = new Dictionary();
+            var keys = key.Split(".");
+            for (int i = 0; i < keys.Length; i++)
+            {
+                if (i == keys.Length - 1)
+                    return dictionary.Get(keys[i], defaultReturn);
+                dictionary = dictionary.Get<GDDictionary>(keys[i]);
+                if (dictionary == null)
+                    return defaultReturn;
+            }
+            return defaultReturn;
+        }
+
+        public static GDDictionary ToGDDict(this object obj)
+        {
+            GDDictionary dict = new GDDictionary();
             foreach (var prop in obj.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 dict[prop.Name] = prop.GetValue(obj, null);
