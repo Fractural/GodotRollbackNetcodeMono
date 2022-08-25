@@ -30,7 +30,11 @@ namespace GodotRollbackNetcode
             for (int i = 0; i < keys.Length; i++)
             {
                 if (i == keys.Length - 1)
-                    return dictionary.Get(keys[i], defaultReturn);
+                {
+                    if (dictionary.Contains(key))
+                        return (T)dictionary[key];
+                    return defaultReturn;
+                }
                 dictionary = dictionary.Get<GDDictionary>(keys[i]);
                 if (dictionary == null)
                     return defaultReturn;
