@@ -1,20 +1,24 @@
 Godot Rollback Netcode Mono 🔃
 ==============================
 
-This is a fork of [SnopekGames' Godot Rollback Netcode addon](https://gitlab.com/snopek-games/godot-rollback-netcode) that adds C# support via wrappers. This addon implements rollback and prediction netcode in the Godot game engine.
+This is an addon that provides C# support for [SnopekGames' Godot Rollback Netcode addon](https://gitlab.com/snopek-games/godot-rollback-netcode).
 
 Read the [original readme](./ORIGINAL_README.md) for general instructions on how to install and use the plugin. The tutorial videos linked in that readme are especially good at getting you up to speed on how the plugin works.
 
 Once you're familiar with the plugin, check out the [Mono (C#) Support](#mono-c-support) section to learn more about the C# support.
 
+## Installation
 
-Mono (C#) Support
------------------
+1. Make sure the `godot-rollback-netcode` addon is installed. [See the original README for how to do that](ORIGINAL_README.md).
+1. Copy the `addons/GodotRollbackNetcodeMono` directory from this project into
+your Godot project *at the exact same path*.
+
+## Mono (C#) Support
 
 This addon features C# support primarily via wrapper classes that 
 wrap around the existing GDScript code. 
 
-To enable mono support, add the `res://addons/godot-rollback-netcode/mono/SyncMonoInit.cs` script as an
+To enable mono support, add the `res://addons/GodotRollbackNetcodeMono/SyncMonoInit.cs` script as an
 autoload singleton in **Project** -> **Project settings...** and the "Autoload" tab.
 
 ### Wrapper Classes ###
