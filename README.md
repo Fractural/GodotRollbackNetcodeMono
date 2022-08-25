@@ -3,7 +3,7 @@ Godot Rollback Netcode Mono 🔃
 
 This is an addon that provides C# support for [SnopekGames' Godot Rollback Netcode addon](https://gitlab.com/snopek-games/godot-rollback-netcode).
 
-Read the [original readme](./ORIGINAL_README.md) for general instructions on how to install and use the plugin. The tutorial videos linked in that readme are especially good at getting you up to speed on how the plugin works.
+Please check out their repo for general instructions on how to install and use their rollback plugin. The tutorial videos linked in their readme are especially good at getting you up to speed on how the plugin works.
 
 Once you're familiar with the plugin, check out the [Mono (C#) Support](#mono-c-support) section to learn more about the C# support.
 
