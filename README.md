@@ -1,7 +1,14 @@
-Godot Rollback Netcode
-======================
+Godot Rollback Netcode Mono
+===========================
+
+**This is a fork of [SnopekGames' Godot Rollback Netcode addon](https://gitlab.com/snopek-games/godot-rollback-netcode) that adds C# support via wrappers.**
+
+**Check out the [Mono (C#) Support](#mono-c-support) for more information about the added C# support**
+
+-----------------------
 
 ![Logo](icon.png)
+
 
 This is an addon for implementing rollback and prediction netcode in the Godot
 game engine.
