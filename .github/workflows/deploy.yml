@@ -26,6 +26,15 @@ jobs:
           FOLDER: addons/GodotRollbackNetcodeMono
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Deploy to local repo
+      - name: Deploy Godot Rollback Netcode to Dependency Branch
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: godot-rollback-netcode
+          FOLDER: addons/godot-rollback-netcode
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create Release
         run: |
           mkdir release
