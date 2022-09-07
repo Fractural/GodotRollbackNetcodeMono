@@ -1,6 +1,8 @@
 Godot Rollback Netcode Mono 🔃
 ==============================
 
+![Deploy](https://github.com/Fractural/GodotRollbackNetcodeMono/actions/workflows/deploy.yml/badge.svg)
+
 This is an addon that provides C# support for [SnopekGames' Godot Rollback Netcode addon](https://gitlab.com/snopek-games/godot-rollback-netcode).
 
 Please check out their repo for general instructions on how to install and use their rollback plugin. The tutorial videos linked in their readme are especially good at getting you up to speed on how the plugin works.

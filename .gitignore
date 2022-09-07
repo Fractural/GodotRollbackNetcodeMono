@@ -11,6 +11,10 @@ export_presets.cfg
 .mono/
 data_*/
 
+# Stub project
+bin/
+obj/
+
 # VSCode Settings 
 .vscode/
 
