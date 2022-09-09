@@ -16,12 +16,12 @@ namespace GodotRollbackNetcode
 
     public interface INetworkPreProcess : INetworkSync
     {
-        void _NetworkPreProcess(GDDictionary input);
+        void _NetworkPreprocess(GDDictionary input);
     }
 
     public interface INetworkPostProcess : INetworkSync
     {
-        void _NetworkPostProcess(GDDictionary input);
+        void _NetworkPostprocess(GDDictionary input);
     }
 
     public interface IInterpolateState : INetworkSync
