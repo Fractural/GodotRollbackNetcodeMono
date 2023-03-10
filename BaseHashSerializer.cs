@@ -1,7 +1,7 @@
-﻿using GDDictionary = Godot.Collections.Dictionary;
-using GDArray = Godot.Collections.Array;
+﻿using GDC = Godot.Collections;
 using Godot;
 using System;
+using Fractural.Utils;
 
 namespace GodotRollbackNetcode
 {
@@ -18,9 +18,9 @@ namespace GodotRollbackNetcode
 
         public virtual object Serialize(object value)
         {
-            if (value is GDDictionary dict)
+            if (value is GDC.Dictionary dict)
                 return SerializeDictionary(dict);
-            else if (value is GDArray array)
+            else if (value is GDC.Array array)
                 return SerializeArray(array);
             else if (value is Resource resource)
                 return SerializeResource(resource);
@@ -30,106 +30,106 @@ namespace GodotRollbackNetcode
             return SerializeOther(value);
         }
 
-        protected virtual GDDictionary SerializeDictionary(GDDictionary value)
+        protected virtual GDC.Dictionary SerializeDictionary(GDC.Dictionary value)
         {
-            var serialized = new GDDictionary();
+            var serialized = new GDC.Dictionary();
             foreach (var key in value.Keys)
                 serialized[key] = Serialize(value[key]);
             return serialized;
         }
 
-        protected virtual GDArray SerializeArray(GDArray array)
+        protected virtual GDC.Array SerializeArray(GDC.Array array)
         {
-            var serialized = new GDArray();
+            var serialized = new GDC.Array();
             foreach (var item in array)
                 serialized.Add(Serialize(item));
             return serialized;
         }
 
-        protected virtual GDDictionary SerializeResource(Resource value)
+        protected virtual GDC.Dictionary SerializeResource(Resource value)
         {
-            return new
+            return new GDC.Dictionary()
             {
-                _ = nameof(Resource),
-                path = value.ResourcePath
-            }.ToGDDict();
+                ["_"] = nameof(Resource),
+                ["path"] = value.ResourcePath
+            };
         }
 
-        protected virtual GDDictionary SerializeObject(Godot.Object value)
+        protected virtual GDC.Dictionary SerializeObject(Godot.Object value)
         {
-            return new
+            return new GDC.Dictionary()
             {
-                _ = nameof(Godot.Object),
-                str = value.ToString(),
-            }.ToGDDict();
+                ["_"] = nameof(Godot.Object),
+                ["str"] = value.ToString(),
+            };
         }
 
         protected virtual object SerializeOther(object value)
         {
             if (value is Vector2 vector2)
-                return new
+                return new GDC.Dictionary()
                 {
-                    _ = nameof(Vector2),
-                    x = vector2.x,
-                    y = vector2.y
-                }.ToGDDict();
+                    ["_"] = nameof(Vector2),
+                    ["x"] = vector2.x,
+                    ["y"] = vector2.y
+                };
             else if (value is Vector3 vector3)
-                return new
+                return new GDC.Dictionary()
                 {
-                    _ = nameof(Vector3),
-                    x = vector3.x,
-                    y = vector3.y,
-                    z = vector3.z
-                }.ToGDDict();
+                    ["_"] = nameof(Vector3),
+                    ["x"] = vector3.x,
+                    ["y"] = vector3.y,
+                    ["z"] = vector3.z
+                };
             else if (value is Transform2D transform2D)
-                return new
+                return new GDC.Dictionary()
                 {
-                    _ = nameof(Transform2D),
-                    x = new
+                    ["_"] = nameof(Transform2D),
+                    ["x"] = new GDC.Dictionary()
                     {
-                        x = transform2D.x.x,
-                        y = transform2D.x.y
-                    }.ToGDDict(),
-                    y = new
+                        ["x"] = transform2D.x.x,
+                        ["y"] = transform2D.x.y
+                    },
+                    ["y"] = new GDC.Dictionary()
                     {
-                        x = transform2D.y.x,
-                        y = transform2D.y.y
-                    }.ToGDDict(),
-                    origin = new
+                        ["x"] = transform2D.y.x,
+                        ["y"] = transform2D.y.y
+                    },
+                    ["origin"] = new GDC.Dictionary()
                     {
-                        x = transform2D.origin.x,
-                        y = transform2D.origin.y
-                    }.ToGDDict()
-                }.ToGDDict();
+                        ["x"] = transform2D.origin.x,
+                        ["y"] = transform2D.origin.y
+                    }
+                };
             else if (value is Transform transform)
-                return new
+                return new GDC.Dictionary()
                 {
-                    _ = nameof(Transform),
-                    x = new
+                    ["_"] = nameof(Transform),
+                    ["x"] = new GDC.Dictionary()
                     {
-                        x = transform.basis.x.x,
-                        y = transform.basis.x.y,
-                        z = transform.basis.x.z,
-                    }.ToGDDict(),
-                    y = new
+                        ["x"] = transform.basis.x.x,
+                        ["y"] = transform.basis.x.y,
+                        ["z"] = transform.basis.x.z,
+                    },
+                    ["y"] = new GDC.Dictionary()
                     {
-                        x = transform.basis.y.x,
-                        y = transform.basis.y.y,
-                        z = transform.basis.y.z
-                    }.ToGDDict(),
-                    z = new
+                        ["x"] = transform.basis.y.x,
+                        ["y"] = transform.basis.y.y,
+                        ["z"] = transform.basis.y.z
+                    },
+                    ["z"] = new GDC.Dictionary()
                     {
-                        x = transform.basis.z.x,
-                        y = transform.basis.z.y,
-                        z = transform.basis.z.z
-                    }.ToGDDict(),
-                    origin = new
+                        ["x"] = transform.basis.z.x,
+                        ["y"] = transform.basis.z.y,
+                        ["z"] = transform.basis.z.z
+                    },
+                    ["origin"] = new GDC.Dictionary()
                     {
-                        x = transform.origin.x,
-                        y = transform.origin.y,
-                        z = transform.origin.z,
-                    }.ToGDDict()
-                }.ToGDDict();
+                        ["x"] = transform.origin.x,
+                        ["y"] = transform.origin.y,
+                        ["z"] = transform.origin.z,
+                    }
+                };
             return value;
         }
 
@@ -139,7 +139,7 @@ namespace GodotRollbackNetcode
 
         public virtual object Unserialize(object value)
         {
-            if (value is GDDictionary dictionary)
+            if (value is GDC.Dictionary dictionary)
             {
                 if (!dictionary.Contains("_"))
                     return UnserializeDictionary(dictionary);
@@ -149,42 +149,42 @@ namespace GodotRollbackNetcode
                 else if (Array.IndexOf(SerializedOthers, type) > -1)
                     return UnserializeOther(dictionary);
             }
-            else if (value is GDArray array)
+            else if (value is GDC.Array array)
             {
                 return UnserializeArray(array);
             }
             return value;
         }
 
-        protected virtual GDDictionary UnserializeDictionary(GDDictionary value)
+        protected virtual GDC.Dictionary UnserializeDictionary(GDC.Dictionary value)
         {
-            var unserialized = new GDDictionary();
+            var unserialized = new GDC.Dictionary();
             foreach (var key in value)
                 unserialized[key] = Unserialize(value[key]);
             return unserialized;
         }
 
-        protected virtual GDArray UnserializeArray(GDArray value)
+        protected virtual GDC.Array UnserializeArray(GDC.Array value)
         {
-            var unserialized = new GDArray();
+            var unserialized = new GDC.Array();
             foreach (var item in value)
                 unserialized.Add(Unserialize(item));
             return unserialized;
         }
 
-        protected virtual Resource UnserializeResource(GDDictionary value)
+        protected virtual Resource UnserializeResource(GDC.Dictionary value)
         {
             return GD.Load<Resource>((string)value["path"]);
         }
 
-        protected virtual string UnserializeObject(GDDictionary value)
+        protected virtual string UnserializeObject(GDC.Dictionary value)
         {
             if (value["_"] is Godot.Object)
                 return (string)value["string"];
             return null;
         }
 
-        protected virtual object UnserializeOther(GDDictionary value)
+        protected virtual object UnserializeOther(GDC.Dictionary value)
         {
             switch ((string)value["_"])
             {

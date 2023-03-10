@@ -1,56 +1,86 @@
-﻿using System;
+﻿using Fractural;
+using Fractural.Commons;
+using Godot;
+using Godot.Collections;
+using System;
 
 namespace GodotRollbackNetcode
 {
-    public class NetworkTimer : GDScriptWrapper
+    [RegisteredType(nameof(NetworkTimer), "res://addons/GodotRollbackNetcodeMono/Assets/NetworkTimer.svg")]
+    public class NetworkTimer : Node, INetworkSerializable, INetworkProcess
     {
-        public NetworkTimer() : base() { }
-        public NetworkTimer(Godot.Object source) : base(source)
-        {
-            source.Connect("timeout", this, nameof(OnTimeout));
-        }
-
-        public bool Autostart
-        {
-            get => (bool)Source.Get("autostart");
-            set => Source.Set("autostart", value);
-        }
-
-        public bool OneShot
-        {
-            get => (bool)Source.Get("one_shot");
-            set => Source.Set("one_shot", value);
-        }
-
-        public bool WaitTicks
-        {
-            get => (bool)Source.Get("wait_ticks");
-            set => Source.Set("wait_ticks", value);
-        }
-
-        public bool HashState
-        {
-            get => (bool)Source.Get("hash_state");
-            set => Source.Set("hash_state", value);
-        }
+        public bool Autostart { get; set; }
+        public bool OneShot { get; set; }
+        public int WaitTicks { get; set; }
+        public bool HashState { get; set; }
+        public bool IsRunning { get; private set; }
+        public bool IsStopped => !IsRunning;
+        public int TicksLeft { get; private set; }
 
         public event Action Timeout;
 
-        private void OnTimeout()
+        public override void _Ready()
         {
-            Timeout?.Invoke();
+            AddToGroup(SyncManager.NetworkSyncGroup);
+            SyncManager.Global.Connect("sync_stopped", this, nameof(OnSyncManagerSyncStopped));
+        }
+
+        private void OnSyncManagerSyncStopped()
+        {
+            Stop();
         }
 
         public void Start(int ticks = -1)
         {
-            Source.Call("start", ticks);
+            if (ticks > 0)
+                WaitTicks = ticks;
+            TicksLeft = WaitTicks;
+            IsRunning = true;
         }
 
         public void Stop()
         {
-            Source.Call("stop");
+            IsRunning = false;
+            TicksLeft = 0;
         }
 
-        public bool IsStopped => (bool)Source.Call("is_stopped");
+        public void _NetworkProcess(Dictionary input)
+        {
+            if (!IsRunning) return;
+            if (TicksLeft <= 0)
+            {
+                IsRunning = false;
+                return;
+            }
+
+            TicksLeft--;
+
+            if (TicksLeft == 0)
+            {
+                if (!OneShot)
+                    TicksLeft = WaitTicks;
+                Timeout?.Invoke();
+            }
+        }
+
+        public Dictionary _SaveState()
+        {
+            var state = new Dictionary()
+            {
+                [nameof(IsRunning)] = IsRunning,
+                [nameof(WaitTicks)] = WaitTicks,
+                [nameof(TicksLeft)] = TicksLeft,
+            };
+            if (HashState)
+                return state;
+            return state.IgnoreState();
+        }
+
+        public void _LoadState(Dictionary state)
+        {
+            IsRunning = state.GetStateValue<bool>(nameof(IsRunning));
+            WaitTicks = state.GetStateValue<int>(nameof(WaitTicks));
+            TicksLeft = state.GetStateValue<int>(nameof(TicksLeft));
+        }
     }
 }

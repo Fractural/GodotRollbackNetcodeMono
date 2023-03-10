@@ -1,6 +1,7 @@
+using Fractural;
 using Godot;
 using System;
-using GDDictionary = Godot.Collections.Dictionary;
+using GDC = Godot.Collections;
 
 namespace GodotRollbackNetcode
 {
@@ -23,6 +24,8 @@ namespace GodotRollbackNetcode
             if (autoloadedNode != null)
                 instance = new SyncManager(autoloadedNode);
         }
+
+        public const string NetworkSyncGroup = "network_sync";
         #endregion
 
         #region Object Variables
@@ -103,9 +106,9 @@ namespace GodotRollbackNetcode
         #endregion
 
         #region Collection Variables
-        public GDDictionary Peers
+        public GDC.Dictionary Peers
         {
-            get => (GDDictionary)Source.Get("peers");
+            get => (GDC.Dictionary)Source.Get("peers");
             set => Source.Set("peers", value);
         }
 
@@ -135,9 +138,9 @@ namespace GodotRollbackNetcode
             set => Source.Set("mechanized", value);
         }
 
-        public GDDictionary MechanizedInputReceived
+        public GDC.Dictionary MechanizedInputReceived
         {
-            get => (GDDictionary)Source.Get("mechanized_input_received");
+            get => (GDC.Dictionary)Source.Get("mechanized_input_received");
             set => Source.Set("mechanized_input_received", value);
         }
 
@@ -288,9 +291,9 @@ namespace GodotRollbackNetcode
 
         public void ClearPeers() => Source.Call("clear_peers");
 
-        public void StartLogging(string logFilePath) => StartLogging(logFilePath, new GDDictionary());
+        public void StartLogging(string logFilePath) => StartLogging(logFilePath, new GDC.Dictionary());
 
-        public void StartLogging(string logFilePath, GDDictionary matchInfo) => Source.Call("start_logging", logFilePath, matchInfo);
+        public void StartLogging(string logFilePath, GDC.Dictionary matchInfo) => Source.Call("start_logging", logFilePath, matchInfo);
 
         public void StopLogging() => Source.Call("stop_logging");
 
@@ -307,9 +310,9 @@ namespace GodotRollbackNetcode
 
         public void ExecuteMechanizedInterframe() => Source.Call("execute_mechanized_interframe");
 
-        public GDDictionary SortDictionaryKeys(GDDictionary dictionary) => (GDDictionary)Source.Call("sort_dictionary_keys");
+        public GDC.Dictionary SortDictionaryKeys(GDC.Dictionary dictionary) => (GDC.Dictionary)Source.Call("sort_dictionary_keys");
 
-        public Node Spawn(string name, Node parent, PackedScene scene, GDDictionary data, bool rename = true, string signalName = "") => (Node)Source.Call("spawn", name, parent, scene, data, rename, signalName);
+        public Node Spawn(string name, Node parent, PackedScene scene, GDC.Dictionary data, bool rename = true, string signalName = "") => (Node)Source.Call("spawn", name, parent, scene, data, rename, signalName);
 
         public void Despawn(Node node) => Source.Call("despawn", node);
 
@@ -318,11 +321,11 @@ namespace GodotRollbackNetcode
 
         public void SetDefaultSoundBus(string bus) => Source.Call("set_default_sound_bus", bus);
 
-        public void PlaySound(string identifier, AudioStream sound, GDDictionary info) => Source.Call("play_sound", identifier, sound, info);
+        public void PlaySound(string identifier, AudioStream sound, GDC.Dictionary info) => Source.Call("play_sound", identifier, sound, info);
 
         public void PlaySound(string identifier, AudioStream sound, Vector2? position = null, float? volumeDb = null, float? pitchScale = null, string bus = null)
         {
-            var info = new GDDictionary();
+            var info = new GDC.Dictionary();
             if (position != null) info["position"] = position;
             if (volumeDb != null) info["volume_db"] = volumeDb;
             if (pitchScale != null) info["pitch_scale"] = pitchScale;
@@ -332,7 +335,7 @@ namespace GodotRollbackNetcode
 
         public bool EnsureCurrentTickInputComplete() => (bool)Source.Call("ensure_current_tick_input_complete");
 
-        public string OrderedDict2Str(GDDictionary dict) => (string)Source.Call("ordered_dict2str");
+        public string OrderedDict2Str(GDC.Dictionary dict) => (string)Source.Call("ordered_dict2str");
         #endregion
 
         #region Signal Events
@@ -350,7 +353,7 @@ namespace GodotRollbackNetcode
         public delegate void RollbackFlaggedDelegate(int tick);
         public event RollbackFlaggedDelegate RollbackFlagged;
 
-        public delegate void PredictionMissedDelegate(int tick, int peerId, GDDictionary localInput, GDDictionary remoteInput);
+        public delegate void PredictionMissedDelegate(int tick, int peerId, GDC.Dictionary localInput, GDC.Dictionary remoteInput);
         public event PredictionMissedDelegate PredictionMissed;
 
         public delegate void RemoteStateMismatchDelegate(int tick, int peerId, int localHash, int remoteHash);
@@ -377,7 +380,7 @@ namespace GodotRollbackNetcode
         public delegate void TickInputCompleteDelegate(int tick);
         public event TickInputCompleteDelegate TickInputComplete;
 
-        public delegate void SceneSpawnedDelegate(string name, Node spawnedNode, PackedScene scene, GDDictionary data);
+        public delegate void SceneSpawnedDelegate(string name, Node spawnedNode, PackedScene scene, GDC.Dictionary data);
         public event SceneSpawnedDelegate SceneSpawned;
 
         public delegate void SceneDespawnedDelegate(string name, Node node);
@@ -423,7 +426,7 @@ namespace GodotRollbackNetcode
             SceneDespawned?.Invoke(name, node);
         }
 
-        private void OnSceneSpawned(string name, Node spawnedNode, PackedScene scene, GDDictionary data)
+        private void OnSceneSpawned(string name, Node spawnedNode, PackedScene scene, GDC.Dictionary data)
         {
             SceneSpawned?.Invoke(name, spawnedNode, scene, data);
         }
@@ -468,7 +471,7 @@ namespace GodotRollbackNetcode
             RemoteStateMismatch?.Invoke(tick, peerId, localHash, remoteHash);
         }
 
-        private void OnPredictionMissed(int tick, int peerId, GDDictionary localInput, GDDictionary remoteInput)
+        private void OnPredictionMissed(int tick, int peerId, GDC.Dictionary localInput, GDC.Dictionary remoteInput)
         {
             PredictionMissed?.Invoke(tick, peerId, localInput, remoteInput);
         }

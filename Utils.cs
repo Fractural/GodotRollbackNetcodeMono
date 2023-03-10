@@ -1,60 +1,44 @@
-﻿using Godot;
+﻿using Fractural.Utils;
+using Godot;
 using System;
 using System.Reflection;
-using GDDictionary = Godot.Collections.Dictionary;
+using GDC = Godot.Collections;
 
 namespace GodotRollbackNetcode
 {
     public static class Utils
     {
-        public static T AsWrapper<T>(this Godot.Object source) where T : GDScriptWrapper
+        /// <summary>
+        /// Fetchs value from the state dictionary regardless if the key starts with "_" or not.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="stateDict"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static T GetStateValue<T>(this GDC.Dictionary stateDict, string key)
         {
-            return (T)Activator.CreateInstance(typeof(T), new object[] { source });
+            key = key.TrimStart('_');
+            return stateDict.Get<T>(key);
         }
 
-        public static T GetNodeAsWrapper<T>(this Node node, NodePath path) where T : GDScriptWrapper
+        /// <summary>
+        /// Changes <paramref name="stateDict"/> keys to start with "_", which 
+        /// makes the <see cref="IHashSerializer"/> ignore it when generating a hash 
+        /// of the client's state.
+        /// </summary>
+        /// <param name="stateDict"></param>
+        /// <returns></returns>
+        public static GDC.Dictionary IgnoreState(this GDC.Dictionary stateDict)
         {
-            return node.GetNode(path).AsWrapper<T>();
-        }
-
-        public static T Get<T>(this GDDictionary dictionary, object key, T defaultReturn = default)
-        {
-            if (dictionary.Contains(key))
-                return (T)dictionary[key];
-            return defaultReturn;
-        }
-
-        public static T Get<T>(this GDDictionary dictionary, string key, T defaultReturn = default)
-        {
-            var keys = key.Split(".");
-            for (int i = 0; i < keys.Length; i++)
+            var newDict = new GDC.Dictionary();
+            foreach (var key in stateDict.Keys)
             {
-                if (i == keys.Length - 1)
-                {
-                    if (dictionary.Contains(key))
-                        return (T)dictionary[key];
-                    return defaultReturn;
-                }
-                dictionary = dictionary.Get<GDDictionary>(keys[i]);
-                if (dictionary == null)
-                    return defaultReturn;
+                if (key is string strKey && !strKey.StartsWith("_"))
+                    newDict["_" + key] = stateDict[key];
+                else
+                    newDict[key] = stateDict[key];
             }
-            return defaultReturn;
-        }
-
-        public static GDDictionary ToGDDict(this object obj)
-        {
-            GDDictionary dict = new GDDictionary();
-            foreach (var prop in obj.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-            {
-                dict[prop.Name] = prop.GetValue(obj, null);
-            }
-            return dict;
-        }
-
-        public static Vector2 Lerp(this Vector2 start, Vector2 end, float weight)
-        {
-            return new Vector2(Mathf.Lerp(start.x, end.x, weight), Mathf.Lerp(start.y, end.y, weight));
+            return newDict;
         }
     }
 }

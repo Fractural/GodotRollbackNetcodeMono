@@ -1,18 +1,47 @@
-﻿namespace GodotRollbackNetcode
-{
-    public class NetworkRandomNumberGenerator : GDScriptWrapper
-    {
-        public NetworkRandomNumberGenerator() { }
-        public NetworkRandomNumberGenerator(Godot.Object source) : base(source) { }
+﻿using Fractural;
+using Fractural.Commons;
+using Fractural.Utils;
+using Godot;
+using Godot.Collections;
 
-        public int Seed
+namespace GodotRollbackNetcode
+{
+    [RegisteredType(nameof(NetworkRandomNumberGenerator), "res://addons/GodotRollbackNetcodeMono/Assets/NetworkRNG.svg")]
+    public class NetworkRandomNumberGenerator : Node, INetworkSerializable
+    {
+        private RandomNumberGenerator generator;
+
+        private ulong seed;
+        public ulong Seed
         {
-            get => (int)Source.Call("get_seed");
-            set => Source.Call("set_seed", value);
+            get => seed;
+            set
+            {
+                seed = value;
+                generator.Seed = value;
+            }
         }
 
-        public void Randomize() => Source.Call("randomize");
-        public int Randi() => (int)Source.Call("randi");
-        public int RandiRange(int from, int to) => (int)Source.Call("randi_range", from, to);
+        public override void _Ready()
+        {
+            generator = new RandomNumberGenerator();
+        }
+
+        public void Randomize() => generator.Randomize();
+        public uint Randi() => generator.Randi();
+        public int RandiRange(int from, int to) => generator.RandiRange(from, to);
+
+        public Dictionary _SaveState()
+        {
+            return new Dictionary()
+            {
+                ["state"] = generator.State.Serialize()
+            };
+        }
+
+        public void _LoadState(Dictionary state)
+        {
+            generator.State = state.Get<byte[]>("state").DeserializePrimitive<ulong>();
+        }
     }
 }
