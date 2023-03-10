@@ -1,4 +1,5 @@
-﻿using GDDictionary = Godot.Collections.Dictionary;
+﻿using Fractural;
+using GDC = Godot.Collections;
 
 namespace GodotRollbackNetcode
 {
@@ -7,8 +8,8 @@ namespace GodotRollbackNetcode
         public HashSerializerWrapper() { }
         public HashSerializerWrapper(Godot.Object source) : base(source) { }
 
-        public object Serialize(object value) => (GDDictionary)Source.Call("serialize", value);
+        public object Serialize(object value) => (GDC.Dictionary)Source.Call("serialize", value);
 
-        public object Unserialize(object value) => (GDDictionary)Source.Call("unserialize", value);
+        public object Unserialize(object value) => (GDC.Dictionary)Source.Call("unserialize", value);
     }
 }

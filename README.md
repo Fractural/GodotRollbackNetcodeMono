@@ -23,7 +23,7 @@ wrap around the existing GDScript code.
 To enable mono support, add the `res://addons/GodotRollbackNetcodeMono/SyncMonoInit.cs` script as an
 autoload singleton in **Project** -> **Project settings...** and the "Autoload" tab.
 
-### Wrapper Classes ###
+### Wrapper Classes
 
 To fetch GDScript nodes, you can use the `GetNodeAsWrapper` extension method provided by `GodotRollbackNetcode.Utils`. This will fetch the node at the given path and then wrap it in a C# wrapper class which you can then use like a normal C# class.
 
@@ -169,7 +169,7 @@ public class CustomMessageSerializer : BaseMessageSerializer
 
 and then go to **Projects** -> **Project Settings** -> **Network** -> **Rollback**, and replace `MessageSerializer` with the path to the C# class (ie. `res://SomePath/To/CustomMessageSerializer.cs`). 
 
-#### Custom MessageSerializer #####
+#### Custom MessageSerializer
 
 For custom message serializers, certain values like the state hash (stored as the "$" key in the input dictionary of SerializeMessageInput) are 32-bit values stored in 64-bit ints in GDScript. However in C#, all GDScript ints are converted to C# ints, which are 32-bit. This means there will be overflow when these values are passed into your MessageSerializer code. and you may get a negative number, even though they were positive 32-bit integers on the GDScript side.
 
@@ -198,6 +198,13 @@ public override GDDictionary UnserializeInput(byte[] serialized)
     ...
 }
 ```
+
+### C# Network Nodes
+
+![csharp_network_nodes](assets\screenshots\csharp_network_nodes.png)
+
+This addons also comes with C# network nodes for RNG, timing, and 
+
 
 Logo credits
 ------------

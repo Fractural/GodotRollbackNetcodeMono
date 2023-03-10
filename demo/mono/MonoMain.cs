@@ -189,7 +189,7 @@ namespace Game
             var dummyNetworkAdaptor = GD.Load<GDScript>("res://addons/godot-rollback-netcode/DummyNetworkAdaptor.gd");
             SyncManager.Global.NetworkAdaptor = new NetworkAdaptorWrapper((Godot.Object)dummyNetworkAdaptor.New());
             SyncManager.Global.Start();
-            clientPlayer.inputPrefix = "player2_";
+            clientPlayer.InputPrefix = "player2_";
 
             mainMenu.Visible = false;
         }

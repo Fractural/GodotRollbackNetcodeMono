@@ -1,8 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://demo/mono/MonoMain.cs" type="Script" id=1]
 [ext_resource path="res://demo/mono/MonoPlayer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/monogram_extended.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://addons/GodotRollbackNetcodeMono/NetworkAnimationPlayer.cs" type="Script" id=4]
+[ext_resource path="res://addons/GodotRollbackNetcodeMono/NetworkRandomNumberGenerator.cs" type="Script" id=5]
+[ext_resource path="res://addons/GodotRollbackNetcodeMono/NetworkTimer.cs" type="Script" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 42
@@ -148,6 +151,15 @@ position = Vector2( 253, 270 )
 
 [node name="ClientPlayer" parent="." instance=ExtResource( 2 )]
 position = Vector2( 824, 279 )
+
+[node name="NetworkRandomNumberGenerator" type="Node" parent="."]
+script = ExtResource( 5 )
+
+[node name="NetworkAnimationPlayer" type="Node" parent="NetworkRandomNumberGenerator"]
+script = ExtResource( 4 )
+
+[node name="NetworkTimer" type="Node" parent="NetworkRandomNumberGenerator"]
+script = ExtResource( 6 )
 
 [connection signal="pressed" from="CanvasLayer/MainMenu/LocalButton" to="." method="OnLocalButtonPressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/OnlineButton" to="." method="OnOnlineButtonPressed"]

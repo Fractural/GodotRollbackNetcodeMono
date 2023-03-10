@@ -8,27 +8,13 @@
 
 config_version=4
 
-_global_script_classes=[ {
-"base": "AnimationPlayer",
-"class": "NetworkAnimationPlayer",
-"language": "GDScript",
-"path": "res://addons/godot-rollback-netcode/NetworkAnimationPlayer.gd"
-}, {
-"base": "Node",
-"class": "NetworkRandomNumberGenerator",
-"language": "GDScript",
-"path": "res://addons/godot-rollback-netcode/NetworkRandomNumberGenerator.gd"
-}, {
-"base": "Node",
-"class": "NetworkTimer",
-"language": "GDScript",
-"path": "res://addons/godot-rollback-netcode/NetworkTimer.gd"
-} ]
-_global_script_class_icons={
-"NetworkAnimationPlayer": "",
-"NetworkRandomNumberGenerator": "",
-"NetworkTimer": ""
-}
+[FracturalCommons]
+
+Main/GenerateCSharpScriptsTable=false
+Main/GenerateVersionPreprocessorDefines=false
+"C# Resource Registry/ClassPrefix"=""
+"C# Resource Registry/SearchType"=0
+"C# Resource Registry/ResourceScriptDirectories"=[ "res://" ]
 
 [application]
 
@@ -48,8 +34,8 @@ SyncMonoInit="*res://addons/GodotRollbackNetcodeMono/SyncMonoInit.cs"
 multirun/number_of_windows=2
 multirun/window_distance=1270
 multirun/add_custom_args=true
-multirun/first_window_args="server"
-multirun/other_window_args="client"
+multirun/first_window_args=""
+multirun/other_window_args=""
 
 [display]
 
@@ -58,7 +44,11 @@ window/stretch/aspect="keep"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/multirun/plugin.cfg", "res://addons/godot-rollback-netcode/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/FracturalCommons/plugin.cfg", "res://addons/godot-rollback-netcode/plugin.cfg", "res://addons/multirun/plugin.cfg" )
+
+[global]
+
+mult=false
 
 [input]
 
@@ -107,6 +97,10 @@ sync_debug={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777254,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
  ]
 }
+
+[mono]
+
+project/assembly_name="GodotRollbackNetcodeMono"
 
 [network]
 

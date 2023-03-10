@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using Fractural.Utils;
+using Godot;
 using GDDictionary = Godot.Collections.Dictionary;
 
 namespace GodotRollbackNetcode
