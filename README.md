@@ -203,7 +203,7 @@ public override GDDictionary UnserializeInput(byte[] serialized)
 
 ![csharp_network_nodes](assets/screenshots/csharp_network_nodes.png)
 
-This addons also comes with C# network nodes for RNG, timing, and 
+This addons also comes with C# network nodes for RNG, timing, and animation playing.
 
 
 Logo credits
