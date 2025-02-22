@@ -4,22 +4,22 @@
 
 [node name="FrameViewerTimeOffsetSetting" type="HBoxContainer"]
 anchor_right = 1.0
-margin_bottom = 24.0
+offset_bottom = 24.0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="PeerLabel" type="Label" parent="."]
-margin_top = 5.0
-margin_right = 41.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 41.0
+offset_bottom = 19.0
 text = "Peer X"
 
 [node name="OffsetValue" type="SpinBox" parent="."]
-margin_left = 45.0
-margin_right = 119.0
-margin_bottom = 24.0
+offset_left = 45.0
+offset_right = 119.0
+offset_bottom = 24.0
 min_value = -10000.0
 max_value = 10000.0
 rounded = true
@@ -28,10 +28,10 @@ allow_lesser = true
 align = 2
 
 [node name="MillisecondsLabel" type="Label" parent="."]
-margin_left = 123.0
-margin_top = 5.0
-margin_right = 143.0
-margin_bottom = 19.0
+offset_left = 123.0
+offset_top = 5.0
+offset_right = 143.0
+offset_bottom = 19.0
 size_flags_horizontal = 9
 text = "ms"
 

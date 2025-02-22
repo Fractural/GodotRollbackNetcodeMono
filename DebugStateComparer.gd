@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 const JSON_INDENT = "    "
 
@@ -106,7 +106,7 @@ func _find_mismatches_recursive(local_state: Dictionary, remote_state: Dictionar
 
 static func _get_diff_path_string(path: Array, key) -> String:
 	if path.size() > 0:
-		return PoolStringArray(path).join(" -> ") + " -> " + str(key)
+		return " -> ".join(PackedStringArray(path)) + " -> " + str(key)
 	return str(key)
 
 static func _extend_diff_path(path: Array, key) -> Array:
@@ -129,30 +129,30 @@ static func _convert_array_to_dictionary(a: Array) -> Dictionary:
 	return d
 
 func print_mismatches() -> String:
-	var data := PoolStringArray()
+	var data := PackedStringArray()
 	
 	for mismatch in mismatches:
 		match mismatch.type:
 			MismatchType.MISSING:
 				data.append(" => [MISSING] %s" % mismatch.path)
-				data.append(JSON.print(mismatch.local_state, JSON_INDENT))
+				data.append(JSON.stringify(mismatch.local_state, JSON_INDENT))
 				data.append('')
 			
 			MismatchType.EXTRA:
 				data.append(" => [EXTRA] %s" % mismatch.path)
-				data.append(JSON.print(mismatch.remote_state, JSON_INDENT))
+				data.append(JSON.stringify(mismatch.remote_state, JSON_INDENT))
 				data.append('')
 			
 			MismatchType.REORDER:
 				data.append(" => [REORDER] %s" % mismatch.path)
-				data.append("LOCAL:  %s" % JSON.print(mismatch.local_state, JSON_INDENT))
-				data.append("REMOTE: %s" % JSON.print(mismatch.remote_state, JSON_INDENT))
+				data.append("LOCAL:  %s" % JSON.stringify(mismatch.local_state, JSON_INDENT))
+				data.append("REMOTE: %s" % JSON.stringify(mismatch.remote_state, JSON_INDENT))
 				data.append('')
 			
 			MismatchType.DIFFERENCE:
 				data.append(" => [DIFF] %s" % mismatch.path)
-				data.append("LOCAL:  %s" % JSON.print(mismatch.local_state, JSON_INDENT))
-				data.append("REMOTE: %s" % JSON.print(mismatch.remote_state, JSON_INDENT))
+				data.append("LOCAL:  %s" % JSON.stringify(mismatch.local_state, JSON_INDENT))
+				data.append("REMOTE: %s" % JSON.stringify(mismatch.remote_state, JSON_INDENT))
 				data.append('')
 	
-	return data.join("\n")
+	return "\n".join(data)
