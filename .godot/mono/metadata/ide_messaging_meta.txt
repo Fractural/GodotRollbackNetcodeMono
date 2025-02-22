@@ -1,2 +1,0 @@
-﻿58141
-C:/Program Files/Godot/4.x-Mono/godot.exe

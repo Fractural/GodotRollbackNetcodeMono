@@ -1,5 +1,0 @@
-Shader
-VisualShader
-PlaceholderTexture2D
-ImageTexture
-Image
