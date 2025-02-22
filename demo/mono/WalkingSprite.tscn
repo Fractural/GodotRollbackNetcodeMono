@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/godot.png" type="Texture" id=1]
+[ext_resource path="res://demo/mono/WalkingSprite.cs" type="Script" id=2]
+
+[node name="WalkingSprite" type="Sprite" groups=["network_sync"]]
+modulate = Color( 0.407843, 0.454902, 0.54902, 1 )
+z_index = -10
+texture = ExtResource( 1 )
+script = ExtResource( 2 )
+speed = 10.0

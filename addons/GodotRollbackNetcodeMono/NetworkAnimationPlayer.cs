@@ -1,9 +1,7 @@
-﻿using Fractural;
-using Fractural.Commons;
+﻿using Fractural.Commons;
 using Fractural.Utils;
 using Godot;
 using Godot.Collections;
-using System;
 
 namespace GodotRollbackNetcode
 {
@@ -20,13 +18,13 @@ namespace GodotRollbackNetcode
             AddToGroup(SyncManager.NetworkSyncGroup);
         }
 
-        public void _NetworkProcess(Dictionary input)
+        public void _network_process(Dictionary input)
         {
             if (IsPlaying())
                 Advance(SyncManager.Global.TickTime);
         }
 
-        public Dictionary _SaveState()
+        public Dictionary _save_state()
         {
             if (IsPlaying() && (!AutoReset || CurrentAnimation != "RESET"))
                 return new Dictionary()
@@ -46,7 +44,7 @@ namespace GodotRollbackNetcode
                 };
         }
 
-        public void _LoadState(Dictionary state)
+        public void _load_state(Dictionary state)
         {
             if (state.Get<bool>(nameof(IsPlaying)))
             {

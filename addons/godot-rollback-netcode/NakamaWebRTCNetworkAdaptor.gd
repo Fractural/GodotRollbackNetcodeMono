@@ -34,6 +34,7 @@ func attach_network_adaptor(sync_manager) -> void:
 		OnlineMatch.connect("webrtc_peer_added", self, '_on_OnlineMatch_webrtc_peer_added')
 		OnlineMatch.connect("webrtc_peer_removed", self, '_on_OnlineMatch_webrtc_peer_removed')
 		OnlineMatch.connect("disconnected", self, '_on_OnlineMatch_disconnected')
+		OnlineMatch.connect("match_left", self, "_on_OnlineMatch_match_left")
 	else:
 		push_error("Can't find OnlineMatch singleton that the NakamaWebRTCNetworkAdaptor depends on!")
 
@@ -42,6 +43,7 @@ func detach_network_adaptor(sync_manager) -> void:
 		OnlineMatch.disconnect("webrtc_peer_added", self, '_on_OnlineMatch_webrtc_peer_added')
 		OnlineMatch.disconnect("webrtc_peer_removed", self, '_on_OnlineMatch_webrtc_peer_removed')
 		OnlineMatch.disconnect("disconnected", self, '_on_OnlineMatch_disconnected')
+		OnlineMatch.disconnect("match_left", self, "_on_OnlineMatch_match_left")
 
 func start_network_adaptor(sync_manager) -> void:
 	_last_messages.clear()
@@ -81,6 +83,9 @@ func _on_OnlineMatch_webrtc_peer_removed(webrtc_peer: WebRTCPeerConnection, play
 		_data_channels.erase(peer_id)
 
 func _on_OnlineMatch_disconnected() -> void:
+	_data_channels.clear()
+
+func _on_OnlineMatch_match_left() -> void:
 	_data_channels.clear()
 
 func send_input_tick(peer_id: int, msg: PoolByteArray) -> void:

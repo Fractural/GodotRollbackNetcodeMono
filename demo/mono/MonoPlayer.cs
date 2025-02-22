@@ -2,7 +2,6 @@ using Fractural.Utils;
 using Godot;
 using Godot.Collections;
 using GodotRollbackNetcode;
-using System;
 
 namespace Game
 {
@@ -16,7 +15,7 @@ namespace Game
             MovementVector,
         }
 
-        public Dictionary _SaveState()
+        public Dictionary _save_state()
         {
             return new Dictionary()
             {
@@ -24,28 +23,38 @@ namespace Game
             };
         }
 
-        public void _LoadState(Dictionary state)
+        public void _load_state(Dictionary state)
         {
             Position = state.Get<Vector2>(nameof(Position));
         }
 
-        public void _InterpolateState(Dictionary oldState, Dictionary newState, float weight)
+        public void _interpolate_state(Dictionary oldState, Dictionary newState, float weight)
         {
             Position = oldState.Get<Vector2>(nameof(Position)).Lerp(
                 newState.Get<Vector2>(nameof(Position)),
                 weight);
         }
 
-        public Dictionary _GetLocalInput()
+        public Dictionary _get_local_input()
         {
-            var inputVector = Input.GetVector(InputPrefix + "left", InputPrefix + "right", InputPrefix + "up", InputPrefix + "down");
+            var inputVector = Vector2.Zero;
+            if (Input.IsActionPressed(InputPrefix + "left"))
+                inputVector.x -= 1;
+            if (Input.IsActionPressed(InputPrefix + "right"))
+                inputVector.x += 1;
+            if (Input.IsActionPressed(InputPrefix + "up"))
+                inputVector.y -= 1;
+            if (Input.IsActionPressed(InputPrefix + "down"))
+                inputVector.y += 1;
+            inputVector = inputVector.Normalized();
+            //var inputVector = Input.GetVector(InputPrefix + "left", InputPrefix + "right", InputPrefix + "up", InputPrefix + "down");
             var input = new Dictionary();
             if (inputVector != Vector2.Zero)
                 input[PlayerInputKey.MovementVector] = inputVector;
             return input;
         }
 
-        public Dictionary _PredictRemoteInput(Dictionary previousInput, int ticksSinceRealInput)
+        public Dictionary _predict_remote_input(Dictionary previousInput, int ticksSinceRealInput)
         {
             var input = previousInput.Duplicate();
             if (ticksSinceRealInput > 5)
@@ -53,7 +62,7 @@ namespace Game
             return input;
         }
 
-        public void _NetworkProcess(Dictionary input)
+        public void _network_process(Dictionary input)
         {
             var inputVector = input.Get(PlayerInputKey.MovementVector, Vector2.Zero);
             Position += inputVector * 8;

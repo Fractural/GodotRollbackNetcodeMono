@@ -1,5 +1,4 @@
-﻿using Fractural;
-using Fractural.Commons;
+﻿using Fractural.Commons;
 using Fractural.Utils;
 using Godot;
 using Godot.Collections;
@@ -12,26 +11,29 @@ namespace GodotRollbackNetcode
         private RandomNumberGenerator generator;
 
         private ulong seed;
+        [Export]
         public ulong Seed
         {
             get => seed;
             set
             {
                 seed = value;
-                generator.Seed = value;
+                if (generator != null)
+                    generator.Seed = value;
             }
         }
 
         public override void _Ready()
         {
             generator = new RandomNumberGenerator();
+            Seed = seed;
         }
 
         public void Randomize() => generator.Randomize();
         public uint Randi() => generator.Randi();
         public int RandiRange(int from, int to) => generator.RandiRange(from, to);
 
-        public Dictionary _SaveState()
+        public Dictionary _save_state()
         {
             return new Dictionary()
             {
@@ -39,7 +41,7 @@ namespace GodotRollbackNetcode
             };
         }
 
-        public void _LoadState(Dictionary state)
+        public void _load_state(Dictionary state)
         {
             generator.State = state.Get<byte[]>("state").DeserializePrimitive<ulong>();
         }

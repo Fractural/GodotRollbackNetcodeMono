@@ -1,5 +1,20 @@
 extends Node
 
+static func is_type(obj: Object):
+	return obj.has_method("attach_network_adaptor") \
+		and obj.has_method("detach_network_adaptor") \
+		and obj.has_method("start_network_adaptor") \
+		and obj.has_method("stop_network_adaptor") \
+		and obj.has_method("send_ping") \
+		and obj.has_method("send_ping_back") \
+		and obj.has_method("send_remote_start") \
+		and obj.has_method("send_remote_stop") \
+		and obj.has_method("send_input_tick") \
+		and obj.has_method("is_network_host") \
+		and obj.has_method("is_network_master_for_node") \
+		and obj.has_method("get_network_unique_id") \
+		and obj.has_method("poll")
+
 signal received_ping (peer_id, msg)
 signal received_ping_back (peer_id, msg)
 signal received_remote_start ()

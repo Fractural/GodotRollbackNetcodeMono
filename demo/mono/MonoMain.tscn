@@ -1,11 +1,14 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://demo/mono/MonoMain.cs" type="Script" id=1]
 [ext_resource path="res://demo/mono/MonoPlayer.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/monogram_extended.ttf" type="DynamicFontData" id=3]
-[ext_resource path="res://addons/GodotRollbackNetcodeMono/NetworkAnimationPlayer.cs" type="Script" id=4]
-[ext_resource path="res://addons/GodotRollbackNetcodeMono/NetworkRandomNumberGenerator.cs" type="Script" id=5]
-[ext_resource path="res://addons/GodotRollbackNetcodeMono/NetworkTimer.cs" type="Script" id=6]
+[ext_resource path="res://demo/mono/FPSCounter.cs" type="Script" id=4]
+[ext_resource path="res://demo/mono/IPLabel.cs" type="Script" id=5]
+[ext_resource path="res://demo/mono/WalkingSpriteSpawner.cs" type="Script" id=6]
+[ext_resource path="res://addons/joystick/virtual_joystick.tscn" type="PackedScene" id=7]
+[ext_resource path="res://demo/mono/WalkingSprite.tscn" type="PackedScene" id=8]
+[ext_resource path="res://addons/GodotRollbackNetcodeMono/NetworkTimer.cs" type="Script" id=9]
 
 [sub_resource type="DynamicFont" id=1]
 size = 42
@@ -146,20 +149,49 @@ margin_right = 40.0
 margin_bottom = 14.0
 text = "Mono"
 
+[node name="IPLabel" type="Label" parent="CanvasLayer"]
+margin_top = 16.0
+margin_right = 40.0
+margin_bottom = 30.0
+text = "IP LABEL"
+script = ExtResource( 5 )
+
+[node name="FPSCounter" type="Label" parent="CanvasLayer"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -40.0
+margin_bottom = 14.0
+text = "60 FPS"
+align = 2
+script = ExtResource( 4 )
+
+[node name="PlayerControls" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 3.0
+margin_top = 1.0
+margin_right = 3.0
+margin_bottom = 1.0
+mouse_filter = 2
+
+[node name="Virtual joystick" parent="CanvasLayer/PlayerControls" instance=ExtResource( 7 )]
+action_left = "player1_left"
+action_right = "player1_right"
+action_up = "player1_up"
+action_down = "player1_down"
+
 [node name="ServerPlayer" parent="." instance=ExtResource( 2 )]
 position = Vector2( 253, 270 )
 
 [node name="ClientPlayer" parent="." instance=ExtResource( 2 )]
 position = Vector2( 824, 279 )
 
-[node name="NetworkRandomNumberGenerator" type="Node" parent="."]
-script = ExtResource( 5 )
-
-[node name="NetworkAnimationPlayer" type="Node" parent="NetworkRandomNumberGenerator"]
-script = ExtResource( 4 )
-
-[node name="NetworkTimer" type="Node" parent="NetworkRandomNumberGenerator"]
+[node name="WalkingSpriteSpawner" type="Node2D" parent="."]
 script = ExtResource( 6 )
+_walkingSpritePrefab = ExtResource( 8 )
+
+[node name="NetworkTimer" type="Node" parent="."]
+script = ExtResource( 9 )
 
 [connection signal="pressed" from="CanvasLayer/MainMenu/LocalButton" to="." method="OnLocalButtonPressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/OnlineButton" to="." method="OnOnlineButtonPressed"]

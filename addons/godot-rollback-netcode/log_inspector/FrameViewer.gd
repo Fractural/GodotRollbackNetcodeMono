@@ -142,7 +142,7 @@ func _get_next_frame_time_for_peer(peer_id: int) -> int:
 	return 0
 
 func replay_to_current_frame() -> void:
-	if not replay_server and not replay_server.is_connected_to_game():
+	if not replay_server or not replay_server.is_connected_to_game():
 		return
 	if log_data.is_loading():
 		return
@@ -167,6 +167,9 @@ func replay_to_current_frame() -> void:
 		if frame_id > current_frame_id:
 			break
 		var frame_data: LogData.FrameData = log_data.get_frame(replay_peer_id, frame_id)
+		if frame_data.type == Logger.FrameType.TICK and frame_data.data.get('skipped', false):
+			# Don't replay skipped ticks.
+			continue
 		_send_replay_frame_data(frame_data)
 	
 	replay_frame = current_frame_id

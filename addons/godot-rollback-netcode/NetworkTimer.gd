@@ -1,5 +1,5 @@
 extends Node
-#class_name NetworkTimer
+class_name NetworkTimer
 
 export (bool) var autostart := false
 export (bool) var one_shot := false

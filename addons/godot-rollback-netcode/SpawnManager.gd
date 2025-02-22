@@ -1,7 +1,6 @@
 extends Node
 
 const REUSE_DESPAWNED_NODES_SETTING := 'network/rollback/spawn_manager/reuse_despawned_nodes'
-const Utils = preload("res://addons/godot-rollback-netcode/Utils.gd")
 
 var spawn_records := {}
 var spawned_nodes := {}
@@ -19,18 +18,18 @@ signal scene_despawned (name, node)
 func _ready() -> void:
 	if ProjectSettings.has_setting(REUSE_DESPAWNED_NODES_SETTING):
 		reuse_despawned_nodes = ProjectSettings.get_setting(REUSE_DESPAWNED_NODES_SETTING)
-	
+
 	add_to_group('network_sync')
 
 func reset() -> void:
 	spawn_records.clear()
 	node_scenes.clear()
 	counter.clear()
-	
+
 	for node in spawned_nodes.values():
 		node.queue_free()
 	spawned_nodes.clear()
-	
+
 	for nodes in retired_nodes.values():
 		for node in nodes:
 			node.queue_free()
@@ -63,21 +62,21 @@ func _instance_scene(resource_path: String) -> Node:
 	if retired_nodes.has(resource_path):
 		var nodes: Array = retired_nodes[resource_path]
 		var node: Node
-		
+
 		while nodes.size() > 0:
 			node = retired_nodes[resource_path].pop_front()
 			if is_instance_valid(node) and not node.is_queued_for_deletion():
 				break
 			else:
 				node = null
-		
+
 		if nodes.size() == 0:
 			retired_nodes.erase(resource_path)
-		
+
 		if node:
 			#print ("Reusing %s" % resource_path)
 			return node
-	
+
 	#print ("Instancing new %s" % resource_path)
 	var scene = load(resource_path)
 	return scene.instance()
@@ -92,13 +91,13 @@ func spawn(name: String, parent: Node, scene: PackedScene, data: Dictionary, ren
 	spawned_node.name = name
 	parent.add_child(spawned_node)
 	_alphabetize_children(parent)
-	
-	if Utils.has_interop_method(spawned_node, '_network_spawn_preprocess'):
-		data = Utils.call_interop_method(spawned_node, '_network_spawn_preprocess', [data])
-	
-	if Utils.has_interop_method(spawned_node, '_network_spawn'):
-		Utils.call_interop_method(spawned_node, '_network_spawn', [data])
-	
+
+	if spawned_node.has_method('_network_spawn_preprocess'):
+		data = spawned_node._network_spawn_preprocess(data)
+
+	if spawned_node.has_method('_network_spawn'):
+		spawned_node._network_spawn(data)
+
 	var spawn_record := {
 		name = spawned_node.name,
 		parent = parent.get_path(),
@@ -106,18 +105,18 @@ func spawn(name: String, parent: Node, scene: PackedScene, data: Dictionary, ren
 		data = data,
 		signal_name = signal_name,
 	}
-	
+
 	spawned_node.set_meta('spawn_signal_name', signal_name)
-	
+
 	var node_path = str(spawned_node.get_path())
 	spawn_records[node_path] = spawn_record
 	spawned_nodes[node_path] = spawned_node
 	node_scenes[node_path] = scene.resource_path
-	
+
 	#print ("[%s] spawned: %s" % [SyncManager.current_tick, spawned_node.name])
-	
+
 	emit_signal("scene_spawned", signal_name, spawned_node, scene, data)
-	
+
 	return spawned_node
 
 func despawn(node: Node) -> void:
@@ -127,8 +126,8 @@ func _do_despawn(node: Node, node_path: String) -> void:
 	var signal_name: String = node.get_meta('spawn_signal_name')
 	emit_signal("scene_despawned", signal_name, node)
 
-	if Utils.has_interop_method(node, '_network_despawn'):
-		Utils.call_interop_method(node, '_network_despawn')
+	if node.has_method('_network_despawn'):
+		node._network_despawn()
 	if node.get_parent():
 		node.get_parent().remove_child(node)
 
@@ -139,7 +138,7 @@ func _do_despawn(node: Node, node_path: String) -> void:
 		retired_nodes[scene_path].append(node)
 	else:
 		node.queue_free()
-	
+
 	spawn_records.erase(node_path)
 	spawned_nodes.erase(node_path)
 	node_scenes.erase(node_path)
@@ -159,7 +158,7 @@ func _save_state() -> Dictionary:
 			spawn_records.erase(node_path)
 			node_scenes.erase(node_path)
 			#print ("[SAVE %s] removing deleted: %s" % [SyncManager.current_tick, node_path])
-	
+
 	return {
 		spawn_records = spawn_records.duplicate(),
 		counter = counter.duplicate(),
@@ -168,13 +167,13 @@ func _save_state() -> Dictionary:
 func _load_state(state: Dictionary) -> void:
 	spawn_records = state['spawn_records'].duplicate()
 	counter = state['counter'].duplicate()
-	
+
 	# Remove nodes that aren't in the state we are loading.
 	for node_path in spawned_nodes.keys().duplicate():
 		if not spawn_records.has(node_path):
 			_do_despawn(spawned_nodes[node_path], node_path)
 			#print ("[LOAD %s] de-spawned: %s" % [SyncManager.current_tick, node_path])
-	
+
 	# Spawn nodes that don't already exist.
 	for node_path in spawn_records.keys():
 		if spawned_nodes.has(node_path):
@@ -182,9 +181,9 @@ func _load_state(state: Dictionary) -> void:
 			if not is_instance_valid(old_node) or old_node.is_queued_for_deletion():
 				spawned_nodes.erase(node_path)
 				node_scenes.erase(node_path)
-		
+
 		is_respawning = true
-		
+
 		if not spawned_nodes.has(node_path):
 			var spawn_record = spawn_records[node_path]
 			var parent = get_tree().current_scene.get_node(spawn_record['parent'])
@@ -195,17 +194,17 @@ func _load_state(state: Dictionary) -> void:
 			spawned_node.name = name
 			parent.add_child(spawned_node)
 			_alphabetize_children(parent)
-			
-			if Utils.has_interop_method(spawned_node, '_network_spawn'):
-				Utils.call_interop_method(spawned_node, '_network_spawn', [spawn_record['data']])
-			
+
+			if spawned_node.has_method('_network_spawn'):
+				spawned_node._network_spawn(spawn_record['data'])
+
 			spawned_nodes[node_path] = spawned_node
 			node_scenes[node_path] = spawn_record['scene']
-			
+
 			spawned_node.set_meta('spawn_signal_name', spawn_record['signal_name'])
 			# @todo Can we get rid of the load() and just use the path?
 			emit_signal("scene_spawned", spawn_record['signal_name'], spawned_node, load(spawn_record['scene']), spawn_record['data'])
 			#print ("[LOAD %s] re-spawned: %s" % [SyncManager.current_tick, node_path])
-		
+
 		is_respawning = false
 

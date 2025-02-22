@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Control",
+"class": "VirtualJoystick",
+"language": "GDScript",
+"path": "res://addons/joystick/virtual_joystick.gd"
+} ]
+_global_script_class_icons={
+"VirtualJoystick": ""
+}
+
 [FracturalCommons]
 
 Main/GenerateCSharpScriptsTable=false
@@ -105,11 +115,13 @@ project/assembly_name="GodotRollbackNetcodeMono"
 [network]
 
 rollback/interpolation=true
+rollback/debug/rollback_ticks=2
+rollback/debug/random_rollback_ticks=5
 rollback/log_inspector/replay_match_scene_path="res://demo/gdscript/Main.tscn"
 
 [physics]
 
-common/physics_fps=30
+common/physics_fps=24
 common/enable_pause_aware_picking=true
 
 [rendering]
