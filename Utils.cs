@@ -1,7 +1,3 @@
-﻿using Fractural.Utils;
-using Godot;
-using System;
-using System.Reflection;
 using GDC = Godot.Collections;
 
 namespace GodotRollbackNetcode
@@ -33,7 +29,7 @@ namespace GodotRollbackNetcode
             var newDict = new GDC.Dictionary();
             foreach (var key in stateDict.Keys)
             {
-                if (key is string strKey && !strKey.StartsWith("_"))
+                if (key.Obj is string strKey && !strKey.StartsWith("_"))
                     newDict["_" + key] = stateDict[key];
                 else
                     newDict[key] = stateDict[key];

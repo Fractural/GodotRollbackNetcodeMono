@@ -1,9 +1,8 @@
-﻿using Fractural;
 using Godot;
 
 namespace GodotRollbackNetcode
 {
-    public class SyncReplay : GDScriptWrapper
+    public partial class SyncReplay : GDScriptWrapper
     {
         #region Singleton
         private static SyncReplay instance;
@@ -26,7 +25,7 @@ namespace GodotRollbackNetcode
 
         public SyncReplay() { }
 
-        public SyncReplay(Godot.Object source) : base(source) { }
+        public SyncReplay(GodotObject source) : base(source) { }
 
         #region Properties
         public bool Active
@@ -35,9 +34,9 @@ namespace GodotRollbackNetcode
             set => Source.Set("active", value);
         }
 
-        public StreamPeerTCP Connection
+        public StreamPeerTcp Connection
         {
-            get => (StreamPeerTCP)Source.Get("connection");
+            get => (StreamPeerTcp)Source.Get("connection");
             set => Source.Set("connection", value);
         }
 

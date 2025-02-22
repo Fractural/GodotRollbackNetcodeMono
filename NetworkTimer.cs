@@ -1,28 +1,31 @@
-﻿using Fractural;
-using Fractural.Commons;
 using Godot;
 using Godot.Collections;
-using System;
 
 namespace GodotRollbackNetcode
 {
-    [RegisteredType(nameof(NetworkTimer), "res://addons/GodotRollbackNetcodeMono/Assets/NetworkTimer.svg")]
-    public class NetworkTimer : Node, INetworkSerializable, INetworkProcess
+    [GlobalClass]
+    [Icon("res://addons/GodotRollbackNetcodeMono/Assets/NetworkTimer.svg")]
+    public partial class NetworkTimer : Node, INetworkSerializable, INetworkProcess
     {
+        [Export]
         public bool Autostart { get; set; }
+        [Export]
         public bool OneShot { get; set; }
+        [Export]
         public int WaitTicks { get; set; }
+        [Export]
         public bool HashState { get; set; }
         public bool IsRunning { get; private set; }
         public bool IsStopped => !IsRunning;
         public int TicksLeft { get; private set; }
 
-        public event Action Timeout;
+        [Signal]
+        public delegate void TimeoutEventHandler();
 
         public override void _Ready()
         {
             AddToGroup(SyncManager.NetworkSyncGroup);
-            SyncManager.Global.Connect("sync_stopped", this, nameof(OnSyncManagerSyncStopped));
+            SyncManager.Global.Connect("sync_stopped", new Callable(this, nameof(OnSyncManagerSyncStopped)));
         }
 
         private void OnSyncManagerSyncStopped()
@@ -44,7 +47,7 @@ namespace GodotRollbackNetcode
             TicksLeft = 0;
         }
 
-        public void _NetworkProcess(Dictionary input)
+        public void _network_process(Dictionary input)
         {
             if (!IsRunning) return;
             if (TicksLeft <= 0)
@@ -59,11 +62,11 @@ namespace GodotRollbackNetcode
             {
                 if (!OneShot)
                     TicksLeft = WaitTicks;
-                Timeout?.Invoke();
+                EmitSignal(nameof(TimeoutEventHandler));
             }
         }
 
-        public Dictionary _SaveState()
+        public Dictionary _save_state()
         {
             var state = new Dictionary()
             {
@@ -76,7 +79,7 @@ namespace GodotRollbackNetcode
             return state.IgnoreState();
         }
 
-        public void _LoadState(Dictionary state)
+        public void _load_state(Dictionary state)
         {
             IsRunning = state.GetStateValue<bool>(nameof(IsRunning));
             WaitTicks = state.GetStateValue<int>(nameof(WaitTicks));

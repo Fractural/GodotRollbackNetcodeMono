@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using GDDictionary = Godot.Collections.Dictionary;
 using System;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace GodotRollbackNetcode
         GDDictionary UnserializeMessage(byte[] serialized);
     }
 
-    public class BaseMessageSerializer : Godot.Reference, IMessageSerializer
+    public partial class BaseMessageSerializer : Godot.RefCounted, IMessageSerializer
     {
         const int DEFAULT_MESSAGE_BUFFER_SIZE = 1280;
         enum InputMessageKey
@@ -28,14 +28,14 @@ namespace GodotRollbackNetcode
 
         public virtual byte[] SerializeInput(GDDictionary input)
         {
-            return GD.Var2Bytes(input);
+            return GD.VarToBytes(input);
         }
 
         private GDDictionary unserialize_input(byte[] serialized) => UnserializeInput(serialized);
 
         public virtual GDDictionary UnserializeInput(byte[] serialized)
         {
-            return (GDDictionary)GD.Bytes2Var(serialized);
+            return (GDDictionary)GD.BytesToVar(serialized);
         }
 
         private byte[] serialize_message(GDDictionary msg) => SerializeMessage(msg);

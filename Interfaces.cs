@@ -1,57 +1,56 @@
-﻿using GDDictionary = Godot.Collections.Dictionary;
-using GDArray = Godot.Collections.Array;
+using GDDictionary = Godot.Collections.Dictionary;
 
 namespace GodotRollbackNetcode
 {
     public interface INetworkSync { }
     public interface IGetLocalInput : INetworkSync
     {
-        GDDictionary _GetLocalInput();
+        GDDictionary _get_local_input();
     }
 
     public interface INetworkProcess : INetworkSync
     {
-        void _NetworkProcess(GDDictionary input);
+        void _network_process(GDDictionary input);
     }
 
     public interface INetworkPreProcess : INetworkSync
     {
-        void _NetworkPreprocess(GDDictionary input);
+        void _network_preprocess(GDDictionary input);
     }
 
     public interface INetworkPostProcess : INetworkSync
     {
-        void _NetworkPostprocess(GDDictionary input);
+        void _network_postprocess(GDDictionary input);
     }
 
     public interface IInterpolateState : INetworkSync
     {
-        void _InterpolateState(GDDictionary oldState, GDDictionary newState, float weight);
+        void _interpolate_state(GDDictionary oldState, GDDictionary newState, float weight);
     }
 
     public interface IPredictRemoteInput : INetworkSync
     {
-        GDDictionary _PredictRemoteInput(GDDictionary previousInput, int ticksSinceRealInput);
+        GDDictionary _predict_remote_input(GDDictionary previousInput, int ticksSinceRealInput);
     }
 
     public interface INetworkSerializable : INetworkSync
     {
-        GDDictionary _SaveState();
-        void _LoadState(GDDictionary state);
+        GDDictionary _save_state();
+        void _load_state(GDDictionary state);
     }
 
     public interface INetworkSpawnPreProcess
     {
-        void _NetworkSpawnPreProcess(GDDictionary data);
+        void _network_spawn_preprocess(GDDictionary data);
     }
 
     public interface INetworkSpawn
     {
-        void _NetworkSpawn(GDDictionary data);
+        void _network_spawn(GDDictionary data);
     }
 
     public interface INetworkDespawn
     {
-        void _NetworkDespawn();
+        void _network_despawn();
     }
 }

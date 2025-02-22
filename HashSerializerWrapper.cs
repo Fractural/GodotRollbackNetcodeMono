@@ -1,15 +1,14 @@
-﻿using Fractural;
-using GDC = Godot.Collections;
+using Godot;
 
 namespace GodotRollbackNetcode
 {
-    public class HashSerializerWrapper : GDScriptWrapper, IHashSerializer
+    public partial class HashSerializerWrapper : GDScriptWrapper, IHashSerializer
     {
         public HashSerializerWrapper() { }
-        public HashSerializerWrapper(Godot.Object source) : base(source) { }
+        public HashSerializerWrapper(GodotObject source) : base(source) { }
 
-        public object Serialize(object value) => (GDC.Dictionary)Source.Call("serialize", value);
+        public Variant Serialize(Variant value) => Source.Call("serialize", value).AsGodotDictionary();
 
-        public object Unserialize(object value) => (GDC.Dictionary)Source.Call("unserialize", value);
+        public Variant Unserialize(Variant value) => Source.Call("unserialize", value).AsGodotDictionary();
     }
 }
