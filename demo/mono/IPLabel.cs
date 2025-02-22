@@ -1,9 +1,9 @@
-﻿using Godot;
+using Godot;
 using System.Linq;
 
 namespace Game
 {
-    public class IPLabel : Label
+    public partial class IPLabel : Label
     {
         public override void _Ready()
         {

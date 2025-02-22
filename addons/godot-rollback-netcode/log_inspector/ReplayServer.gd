@@ -1,13 +1,15 @@
-tool
+@tool
 extends Node
 
 const LogData = preload("res://addons/godot-rollback-netcode/log_inspector/LogData.gd")
 
 const GAME_ARGUMENTS_SETTING = 'network/rollback/log_inspector/replay_arguments'
 const GAME_PORT_SETTING = 'network/rollback/log_inspector/replay_port'
-const MAIN_RUN_ARGS_SETTING = 'editor/main_run_args'
+const MAIN_RUN_ARGS_SETTING = 'editor/run/main_run_args'
+const DEBUG_OPTIONS_SECTION = 'debug_options'
+const DEBUG_INSTANCES_SETTING = 'run_debug_instances'
 
-var server: TCP_Server
+var server: TCPServer
 var connection: StreamPeerTCP
 var editor_interface = null
 var game_pid: int = 0
@@ -31,21 +33,21 @@ func start_listening() -> void:
 		var port = 49111
 		if ProjectSettings.has_setting(GAME_PORT_SETTING):
 			port = ProjectSettings.get_setting(GAME_PORT_SETTING)
-		
-		server = TCP_Server.new()
+
+		server = TCPServer.new()
 		server.listen(port, "127.0.0.1")
-		emit_signal("started_listening")
+		started_listening.emit()
 
 func stop_listening() -> void:
 	if server:
 		server.stop()
 		server = null
-		emit_signal("stopped_listening")
+		stopped_listening.emit()
 
 func disconnect_from_game(restart_listening: bool = true) -> void:
 	if connection:
 		connection.disconnect_from_host()
-		emit_signal("game_disconnected")
+		game_disconnected.emit()
 		connection = null
 	stop_game()
 	if restart_listening:
@@ -59,21 +61,28 @@ func _notification(what: int) -> void:
 
 func launch_game() -> void:
 	stop_game()
-	
+
 	var args_string = "replay"
 	if ProjectSettings.has_setting(GAME_ARGUMENTS_SETTING):
 		args_string = ProjectSettings.get_setting(GAME_ARGUMENTS_SETTING)
-	
+
 	if editor_interface:
+		var editor_settings = editor_interface.get_editor_settings()
+
 		var old_main_run_args = ProjectSettings.get_setting(MAIN_RUN_ARGS_SETTING)
 		ProjectSettings.set_setting(MAIN_RUN_ARGS_SETTING, old_main_run_args + ' ' + args_string)
+		var old_multirun_count = editor_settings.get_project_metadata(DEBUG_OPTIONS_SECTION, DEBUG_INSTANCES_SETTING, 1)
+		editor_settings.set_project_metadata(DEBUG_OPTIONS_SECTION, DEBUG_INSTANCES_SETTING, 1)
+
 		editor_interface.play_main_scene()
+
 		ProjectSettings.set_setting(MAIN_RUN_ARGS_SETTING, old_main_run_args)
+		editor_settings.set_project_metadata(DEBUG_OPTIONS_SECTION, DEBUG_INSTANCES_SETTING, old_multirun_count)
 	else:
 		var args := []
 		for arg in args_string.split(" "):
 			args.push_back(arg)
-		game_pid = OS.execute(OS.get_executable_path(), args, false)
+		game_pid = OS.execute(OS.get_executable_path(), args)
 
 func stop_game() -> void:
 	if editor_interface and editor_interface.is_playing_scene():
@@ -88,7 +97,7 @@ func is_game_started() -> bool:
 	return game_pid > 0
 
 func is_connected_to_game() -> bool:
-	return connection and connection.is_connected_to_host()
+	return connection and connection.get_status() == StreamPeerTCP.STATUS_CONNECTED
 
 func get_status() -> int:
 	if is_connected_to_game():
@@ -101,7 +110,7 @@ func send_message(msg: Dictionary) -> void:
 	if not is_connected_to_game():
 		push_error("Replay server: attempting to send message when not connected to game")
 		return
-	
+
 	connection.put_var(msg)
 
 func send_match_info(log_data: LogData, my_peer_id: int) -> void:
@@ -109,7 +118,7 @@ func send_match_info(log_data: LogData, my_peer_id: int) -> void:
 		return
 	if not log_data or log_data.peer_ids.size() == 0:
 		return
-	
+
 	var peer_ids := []
 	for peer_id in log_data.peer_ids:
 		if peer_id != my_peer_id:
@@ -125,12 +134,13 @@ func send_match_info(log_data: LogData, my_peer_id: int) -> void:
 
 func poll() -> void:
 	if connection:
+		connection.poll()
 		if connection.get_status() == StreamPeerTCP.STATUS_NONE or connection.get_status() == StreamPeerTCP.STATUS_ERROR:
 			disconnect_from_game()
 	if server and not connection and server.is_connection_available():
 		connection = server.take_connection()
 		stop_listening()
-		emit_signal("game_connected")
+		game_connected.emit()
 
 func _process(delta: float) -> void:
 	poll()

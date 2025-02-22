@@ -1,12 +1,11 @@
-﻿using Fractural.Commons;
 using Godot;
 using Godot.Collections;
-using System;
 
 namespace GodotRollbackNetcode
 {
-    [RegisteredType(nameof(NetworkTimer), "res://addons/GodotRollbackNetcodeMono/Assets/NetworkTimer.svg")]
-    public class NetworkTimer : Node, INetworkSerializable, INetworkProcess
+    [GlobalClass]
+    [Icon("res://addons/GodotRollbackNetcodeMono/Assets/NetworkTimer.svg")]
+    public partial class NetworkTimer : Node, INetworkSerializable, INetworkProcess
     {
         [Export]
         public bool Autostart { get; set; }
@@ -20,14 +19,13 @@ namespace GodotRollbackNetcode
         public bool IsStopped => !IsRunning;
         public int TicksLeft { get; private set; }
 
-        public event Action Timeout;
         [Signal]
-        public delegate void TimeoutSignal();
+        public delegate void TimeoutEventHandler();
 
         public override void _Ready()
         {
             AddToGroup(SyncManager.NetworkSyncGroup);
-            SyncManager.Global.Connect("sync_stopped", this, nameof(OnSyncManagerSyncStopped));
+            SyncManager.Global.Connect("sync_stopped", new Callable(this, nameof(OnSyncManagerSyncStopped)));
         }
 
         private void OnSyncManagerSyncStopped()
@@ -64,8 +62,7 @@ namespace GodotRollbackNetcode
             {
                 if (!OneShot)
                     TicksLeft = WaitTicks;
-                Timeout?.Invoke();
-                EmitSignal(nameof(TimeoutSignal));
+                EmitSignal(nameof(TimeoutEventHandler));
             }
         }
 

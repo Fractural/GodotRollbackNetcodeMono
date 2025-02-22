@@ -53,7 +53,7 @@ static func _node_name_sort_callback(a: Node, b: Node) -> bool:
 
 func _alphabetize_children(parent: Node) -> void:
 	var children = parent.get_children()
-	children.sort_custom(self, '_node_name_sort_callback')
+	children.sort_custom(Callable(self, '_node_name_sort_callback'))
 	for index in range(children.size()):
 		var child = children[index]
 		parent.move_child(child, index)
@@ -79,7 +79,7 @@ func _instance_scene(resource_path: String) -> Node:
 
 	#print ("Instancing new %s" % resource_path)
 	var scene = load(resource_path)
-	return scene.instance()
+	return scene.instantiate()
 
 func spawn(name: String, parent: Node, scene: PackedScene, data: Dictionary, rename: bool = true, signal_name: String = '') -> Node:
 	var spawned_node = _instance_scene(scene.resource_path)
@@ -115,7 +115,7 @@ func spawn(name: String, parent: Node, scene: PackedScene, data: Dictionary, ren
 
 	#print ("[%s] spawned: %s" % [SyncManager.current_tick, spawned_node.name])
 
-	emit_signal("scene_spawned", signal_name, spawned_node, scene, data)
+	scene_spawned.emit(signal_name, spawned_node, scene, data)
 
 	return spawned_node
 
@@ -124,7 +124,7 @@ func despawn(node: Node) -> void:
 
 func _do_despawn(node: Node, node_path: String) -> void:
 	var signal_name: String = node.get_meta('spawn_signal_name')
-	emit_signal("scene_despawned", signal_name, node)
+	scene_despawned.emit(signal_name, node)
 
 	if node.has_method('_network_despawn'):
 		node._network_despawn()
@@ -203,7 +203,7 @@ func _load_state(state: Dictionary) -> void:
 
 			spawned_node.set_meta('spawn_signal_name', spawn_record['signal_name'])
 			# @todo Can we get rid of the load() and just use the path?
-			emit_signal("scene_spawned", spawn_record['signal_name'], spawned_node, load(spawn_record['scene']), spawn_record['data'])
+			scene_spawned.emit(spawn_record['signal_name'], spawned_node, load(spawn_record['scene']), spawn_record['data'])
 			#print ("[LOAD %s] re-spawned: %s" % [SyncManager.current_tick, node_path])
 
 		is_respawning = false

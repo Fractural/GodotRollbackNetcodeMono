@@ -1,10 +1,10 @@
 extends Node
 class_name NetworkTimer
 
-export (bool) var autostart := false
-export (bool) var one_shot := false
-export (int) var wait_ticks := 0
-export (bool) var hash_state := true
+@export var autostart := false
+@export var one_shot := false
+@export var wait_ticks := 0
+@export var hash_state := true
 
 var ticks_left := 0
 
@@ -14,7 +14,7 @@ signal timeout ()
 
 func _ready() -> void:
 	add_to_group('network_sync')
-	SyncManager.connect("sync_stopped", self, "_on_SyncManager_sync_stopped")
+	SyncManager.sync_stopped.connect(self._on_SyncManager_sync_stopped)
 	if autostart:
 		start()
 
@@ -40,13 +40,13 @@ func _network_process(_input: Dictionary) -> void:
 	if ticks_left <= 0:
 		_running = false
 		return
-	
+
 	ticks_left -= 1
-	
+
 	if ticks_left == 0:
 		if not one_shot:
 			ticks_left = wait_ticks
-		emit_signal("timeout")
+		timeout.emit()
 
 func _save_state() -> Dictionary:
 	if hash_state:

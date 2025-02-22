@@ -1,10 +1,9 @@
-﻿using Fractural;
-using Fractural.Utils;
+using Godot;
 using System;
 
 namespace GodotRollbackNetcode
 {
-    public class NetworkTimerWrapper : GDScriptWrapper
+    public partial class NetworkTimerWrapper : GDScriptWrapper
     {
         public bool Autostart { get => Source.Get<bool>("auto_start"); set => Source.Set("auto_start", value); }
         public bool OneShot { get => Source.Get<bool>("one_shot"); set => Source.Set("one_shot", value); }
@@ -24,7 +23,7 @@ namespace GodotRollbackNetcode
 
         protected override void ForwardSignalsToEvents()
         {
-            Source.Connect("timeout", this, nameof(OnTimeout));
+            Source.Connect("timeout", new Callable(this, nameof(OnTimeout)));
         }
     }
 }

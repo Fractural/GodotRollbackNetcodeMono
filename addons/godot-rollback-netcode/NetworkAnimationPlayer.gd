@@ -1,7 +1,7 @@
 extends AnimationPlayer
 class_name NetworkAnimationPlayer
 
-export (bool) var auto_reset := true
+@export var auto_reset := true
 
 func _ready() -> void:
 	method_call_mode = AnimationPlayer.ANIMATION_METHOD_CALL_IMMEDIATE
@@ -18,7 +18,7 @@ func _save_state() -> Dictionary:
 			is_playing = true,
 			current_animation = current_animation,
 			current_position = current_animation_position,
-			current_speed = playback_speed,
+			current_speed = speed_scale,
 		}
 	else:
 		return {
@@ -33,7 +33,7 @@ func _load_state(state: Dictionary) -> void:
 		if not is_playing() or current_animation != state['current_animation']:
 			play(state['current_animation'])
 		seek(state['current_position'], true)
-		playback_speed = state['current_speed']
+		speed_scale = state['current_speed']
 	elif is_playing():
 		if auto_reset and has_animation("RESET"):
 			play("RESET")

@@ -1,157 +1,234 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=12 format=3 uid="uid://bkjmj81wycs66"]
 
-[ext_resource path="res://demo/gdscript/Main.gd" type="Script" id=1]
-[ext_resource path="res://demo/gdscript/Player.tscn" type="PackedScene" id=2]
-[ext_resource path="res://assets/monogram_extended.ttf" type="DynamicFontData" id=3]
+[ext_resource type="Script" path="res://demo/gdscript/Main.gd" id="1"]
+[ext_resource type="PackedScene" path="res://demo/gdscript/Player.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://bogn6g5wby00g" path="res://addons/joystick/virtual_joystick.tscn" id="3_2owxp"]
+[ext_resource type="Script" path="res://demo/gdscript/IPLabel.gd" id="3_givab"]
+[ext_resource type="Shader" path="res://assets/bg_shader.gdshader" id="4_1oovr"]
+[ext_resource type="Shader" path="res://assets/vignette.gdshader" id="4_3cum6"]
+[ext_resource type="Script" path="res://demo/gdscript/WalkingSpriteSpawner.gd" id="4_qn0g1"]
+[ext_resource type="PackedScene" uid="uid://bwsqtcs3sj1hq" path="res://demo/gdscript/WalkingSprite.tscn" id="5_b8rir"]
+[ext_resource type="Texture2D" uid="uid://bbkn4rlb7n4k3" path="res://assets/default_texture.tres" id="5_bm1lk"]
 
-[sub_resource type="DynamicFont" id=1]
-size = 42
-font_data = ExtResource( 3 )
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sgx6c"]
+shader = ExtResource("4_3cum6")
+shader_parameter/inner_radius = 0.345
+shader_parameter/outer_radius = 1.0
+shader_parameter/vignette_strength = 1.57
+shader_parameter/dither_strength = 0.03
+shader_parameter/vignette_color = Color(0.0313726, 0.105882, 0.172549, 0.592157)
+shader_parameter/scale = Vector2(1, 0.73)
 
-[sub_resource type="DynamicFont" id=2]
-font_data = ExtResource( 3 )
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r5b6r"]
+shader = ExtResource("4_1oovr")
+shader_parameter/color_gap = Color(0.32549, 0.345098, 0.360784, 1)
+shader_parameter/color_stripe = Color(0.343187, 0.362009, 0.377604, 1)
+shader_parameter/divisions = 0.2
+shader_parameter/stripe_bias = 2.0
+shader_parameter/speed = 5.0
+shader_parameter/angle = 0.785
 
-[node name="Main" type="Node2D"]
-script = ExtResource( 1 )
+[node name="Main" type="Node" node_paths=PackedStringArray("main_menu", "connection_panel", "host_field", "port_field", "message_label", "sync_lost_label", "client_player", "server_player", "reset_button", "local_button", "online_button")]
+script = ExtResource("1")
+main_menu = NodePath("UI/MainMenu")
+connection_panel = NodePath("UI/ConnectionPanel")
+host_field = NodePath("UI/ConnectionPanel/MarginContainer/GridContainer/HostField")
+port_field = NodePath("UI/ConnectionPanel/MarginContainer/GridContainer/PortField")
+message_label = NodePath("UI/MarginContainer3/MessageLabel")
+sync_lost_label = NodePath("UI/MarginContainer3/SyncLostLabel")
+client_player = NodePath("World/ClientPlayer")
+server_player = NodePath("World/ServerPlayer")
+reset_button = NodePath("UI/MarginContainer/ResetButton")
+local_button = NodePath("UI/MainMenu/LocalButton")
+online_button = NodePath("UI/MainMenu/OnlineButton")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="."]
 
-[node name="MainMenu" type="HBoxContainer" parent="CanvasLayer"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -87.5
-margin_top = -20.0
-margin_right = 87.5
-margin_bottom = 20.0
+[node name="Vignette" type="TextureRect" parent="UI"]
+material = SubResource("ShaderMaterial_sgx6c")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_bm1lk")
+expand_mode = 2
 
-[node name="LocalButton" type="Button" parent="CanvasLayer/MainMenu"]
-margin_right = 86.0
-margin_bottom = 40.0
-text = "Play Locally"
+[node name="ConnectionPanel" type="PopupPanel" parent="UI"]
+initial_position = 1
+size = Vector2i(300, 141)
 
-[node name="OnlineButton" type="Button" parent="CanvasLayer/MainMenu"]
-margin_left = 90.0
-margin_right = 175.0
-margin_bottom = 40.0
-text = "Play Online"
+[node name="MarginContainer" type="MarginContainer" parent="UI/ConnectionPanel"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 296.0
+offset_bottom = 137.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
-[node name="ConnectionPanel" type="WindowDialog" parent="CanvasLayer"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -189.0
-margin_top = -45.0
-margin_right = 189.0
-margin_bottom = 45.0
-window_title = "Online"
-
-[node name="GridContainer" type="GridContainer" parent="CanvasLayer/ConnectionPanel"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 371.0
-margin_bottom = 83.0
+[node name="GridContainer" type="GridContainer" parent="UI/ConnectionPanel/MarginContainer"]
+layout_mode = 2
 columns = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="HostLabel" type="Label" parent="CanvasLayer/ConnectionPanel/GridContainer"]
-margin_top = 5.0
-margin_right = 180.0
-margin_bottom = 19.0
+[node name="HostLabel" type="Label" parent="UI/ConnectionPanel/MarginContainer/GridContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Host"
 
-[node name="HostField" type="LineEdit" parent="CanvasLayer/ConnectionPanel/GridContainer"]
-margin_left = 184.0
-margin_right = 364.0
-margin_bottom = 24.0
+[node name="HostField" type="LineEdit" parent="UI/ConnectionPanel/MarginContainer/GridContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 text = "127.0.0.1"
-align = 2
 
-[node name="PortLabel" type="Label" parent="CanvasLayer/ConnectionPanel/GridContainer"]
-margin_top = 33.0
-margin_right = 180.0
-margin_bottom = 47.0
+[node name="PortLabel" type="Label" parent="UI/ConnectionPanel/MarginContainer/GridContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Port"
 
-[node name="PortField" type="LineEdit" parent="CanvasLayer/ConnectionPanel/GridContainer"]
-margin_left = 184.0
-margin_top = 28.0
-margin_right = 364.0
-margin_bottom = 52.0
+[node name="PortField" type="LineEdit" parent="UI/ConnectionPanel/MarginContainer/GridContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 text = "9999"
-align = 2
 
-[node name="ServerButton" type="Button" parent="CanvasLayer/ConnectionPanel/GridContainer"]
-margin_top = 56.0
-margin_right = 180.0
-margin_bottom = 76.0
+[node name="ServerButton" type="Button" parent="UI/ConnectionPanel/MarginContainer/GridContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Server"
 
-[node name="ClientButton" type="Button" parent="CanvasLayer/ConnectionPanel/GridContainer"]
-margin_left = 184.0
-margin_top = 56.0
-margin_right = 364.0
-margin_bottom = 76.0
+[node name="ClientButton" type="Button" parent="UI/ConnectionPanel/MarginContainer/GridContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Client"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="MessageLabel" type="Label" parent="CanvasLayer"]
+[node name="MainMenu" type="HBoxContainer" parent="UI"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.0
+offset_top = -25.0
+offset_right = 125.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="LocalButton" type="Button" parent="UI/MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Play Locally"
+
+[node name="OnlineButton" type="Button" parent="UI/MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Play Online"
+
+[node name="MarginContainer3" type="MarginContainer" parent="UI"]
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -275.0
-margin_right = 276.0
-margin_bottom = 124.0
-custom_fonts/font = SubResource( 1 )
-align = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_left = -250.0
+offset_right = 250.0
+offset_bottom = 400.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
-[node name="SyncLostLabel" type="Label" parent="CanvasLayer"]
+[node name="MessageLabel" type="Label" parent="UI/MarginContainer3"]
+layout_mode = 2
+size_flags_vertical = 5
+text = "Message..."
+horizontal_alignment = 1
+
+[node name="SyncLostLabel" type="Label" parent="UI/MarginContainer3"]
 visible = false
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -106.0
-margin_bottom = 14.0
-custom_fonts/font = SubResource( 2 )
+layout_mode = 2
+size_flags_vertical = 5
 text = "Regaining sync..."
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="ResetButton" type="Button" parent="CanvasLayer"]
+[node name="MarginContainer2" type="MarginContainer" parent="UI"]
+offset_right = 84.0
+offset_bottom = 66.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="UI/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+text = "GDScript"
+
+[node name="IPLabel" type="Label" parent="UI/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+text = "IP LABEL"
+script = ExtResource("3_givab")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI"]
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -48.0
-margin_top = -20.0
+offset_left = -116.0
+offset_top = -66.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="ResetButton" type="Button" parent="UI/MarginContainer"]
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
 text = "RESET"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="ServerPlayer" parent="." instance=ExtResource( 2 )]
-position = Vector2( 230, 367 )
+[node name="PlayerControls" type="MarginContainer" parent="UI"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 64
 
-[node name="ClientPlayer" parent="." instance=ExtResource( 2 )]
-position = Vector2( 771, 364 )
+[node name="VirtualJoystick" parent="UI/PlayerControls" instance=ExtResource("3_2owxp")]
+layout_mode = 2
+action_left = "player1_left"
+action_right = "player1_right"
+action_up = "player1_up"
+action_down = "player1_down"
 
-[connection signal="pressed" from="CanvasLayer/MainMenu/LocalButton" to="." method="_on_LocalButton_pressed"]
-[connection signal="pressed" from="CanvasLayer/MainMenu/OnlineButton" to="." method="_on_OnlineButton_pressed"]
-[connection signal="pressed" from="CanvasLayer/ConnectionPanel/GridContainer/ServerButton" to="." method="_on_ServerButton_pressed"]
-[connection signal="pressed" from="CanvasLayer/ConnectionPanel/GridContainer/ClientButton" to="." method="_on_ClientButton_pressed"]
-[connection signal="pressed" from="CanvasLayer/ResetButton" to="." method="_on_ResetButton_pressed"]
+[node name="World" type="Node2D" parent="."]
+
+[node name="BG" type="Sprite2D" parent="World"]
+z_index = -100
+material = SubResource("ShaderMaterial_r5b6r")
+position = Vector2(580, 311)
+texture = ExtResource("5_bm1lk")
+
+[node name="ServerPlayer" parent="World" instance=ExtResource("2")]
+position = Vector2(230, 367)
+
+[node name="ClientPlayer" parent="World" instance=ExtResource("2")]
+position = Vector2(771, 364)
+
+[node name="WalkingSpriteSpawner" type="Node2D" parent="World"]
+script = ExtResource("4_qn0g1")
+_walking_sprite_prefab = ExtResource("5_b8rir")
+spawn_amount = 50
+
+[connection signal="pressed" from="UI/ConnectionPanel/MarginContainer/GridContainer/ServerButton" to="." method="_on_ServerButton_pressed"]
+[connection signal="pressed" from="UI/ConnectionPanel/MarginContainer/GridContainer/ClientButton" to="." method="_on_ClientButton_pressed"]

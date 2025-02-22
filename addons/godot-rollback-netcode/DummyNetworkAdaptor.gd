@@ -17,14 +17,14 @@ func send_remote_start(peer_id: int) -> void:
 func send_remote_stop(peer_id: int) -> void:
 	pass
 
-func send_input_tick(peer_id: int, msg: PoolByteArray) -> void:
+func send_input_tick(peer_id: int, msg: PackedByteArray) -> void:
 	pass
 
 func is_network_host() -> bool:
 	return my_peer_id == 1
 
 func is_network_master_for_node(node: Node) -> bool:
-	return node.get_network_master() == my_peer_id
+	return node.get_multiplayer_authority() == my_peer_id
 
-func get_network_unique_id() -> int:
+func get_unique_id() -> int:
 	return my_peer_id

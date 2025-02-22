@@ -1,16 +1,15 @@
-using Fractural.Utils;
 using Godot;
 using Godot.Collections;
 using GodotRollbackNetcode;
 
 namespace Game
 {
-    public class MonoPlayer : Sprite, IGetLocalInput, INetworkProcess, INetworkSerializable, IPredictRemoteInput, IInterpolateState
+    public partial class MonoPlayer : Sprite2D, IGetLocalInput, INetworkProcess, INetworkSerializable, IPredictRemoteInput, IInterpolateState
     {
         [Export]
         public string InputPrefix { get; set; } = "player1_";
 
-        enum PlayerInputKey
+        enum PlayerInputKey : int
         {
             MovementVector,
         }
@@ -39,18 +38,18 @@ namespace Game
         {
             var inputVector = Vector2.Zero;
             if (Input.IsActionPressed(InputPrefix + "left"))
-                inputVector.x -= 1;
+                inputVector.X -= 1;
             if (Input.IsActionPressed(InputPrefix + "right"))
-                inputVector.x += 1;
+                inputVector.X += 1;
             if (Input.IsActionPressed(InputPrefix + "up"))
-                inputVector.y -= 1;
+                inputVector.Y -= 1;
             if (Input.IsActionPressed(InputPrefix + "down"))
-                inputVector.y += 1;
+                inputVector.Y += 1;
             inputVector = inputVector.Normalized();
             //var inputVector = Input.GetVector(InputPrefix + "left", InputPrefix + "right", InputPrefix + "up", InputPrefix + "down");
             var input = new Dictionary();
             if (inputVector != Vector2.Zero)
-                input[PlayerInputKey.MovementVector] = inputVector;
+                input[(int)PlayerInputKey.MovementVector] = inputVector;
             return input;
         }
 
@@ -58,13 +57,13 @@ namespace Game
         {
             var input = previousInput.Duplicate();
             if (ticksSinceRealInput > 5)
-                input.Remove(PlayerInputKey.MovementVector);
+                input.Remove((int)PlayerInputKey.MovementVector);
             return input;
         }
 
         public void _network_process(Dictionary input)
         {
-            var inputVector = input.Get(PlayerInputKey.MovementVector, Vector2.Zero);
+            var inputVector = input.Get((int)PlayerInputKey.MovementVector, Vector2.Zero);
             Position += inputVector * 8;
         }
 

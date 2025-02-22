@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwsqtcs3sj1hq"]
+
+[ext_resource type="Texture2D" uid="uid://cw6270xefhtn0" path="res://assets/godot.png" id="1_db4x4"]
+[ext_resource type="Script" path="res://demo/gdscript/WalkingSprite.gd" id="2_c1tim"]
+
+[node name="WalkingSprite" type="Sprite2D" groups=["network_sync"]]
+modulate = Color(0.407843, 0.454902, 0.54902, 1)
+z_index = -10
+texture = ExtResource("1_db4x4")
+script = ExtResource("2_c1tim")

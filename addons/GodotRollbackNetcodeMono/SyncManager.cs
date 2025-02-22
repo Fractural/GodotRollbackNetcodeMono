@@ -1,11 +1,10 @@
-using Fractural;
 using Godot;
 using System;
 using GDC = Godot.Collections;
 
 namespace GodotRollbackNetcode
 {
-    public class SyncManager : GDScriptWrapper
+    public partial class SyncManager : GDScriptWrapper
     {
         #region Singleton
         private static SyncManager instance;
@@ -34,7 +33,7 @@ namespace GodotRollbackNetcode
         {
             get
             {
-                var source = (Godot.Object)Source.Get("network_adaptor");
+                var source = (GodotObject)Source.Get("network_adaptor");
                 if (source == null) return null;
                 if (source is INetworkAdaptor networkAdaptor) return networkAdaptor;
                 if (networkAdaptorWrapper == null || networkAdaptorWrapper.Source != source)
@@ -47,10 +46,10 @@ namespace GodotRollbackNetcode
                     Source.Set("network_adaptor", @base);
                 else if (value is NetworkAdaptorWrapper wrapper)
                     Source.Set("network_adaptor", wrapper.Source);
-                else if (value is Godot.Object obj)
+                else if (value is GodotObject obj)
                     Source.Set("network_adaptor", obj);
                 else
-                    GD.PrintErr($"You can only assign {nameof(BaseNetworkAdaptor)}, {nameof(NetworkAdaptorWrapper)}, or {nameof(Godot)}.{nameof(Godot.Object)} to {nameof(SyncManager)}.{nameof(NetworkAdaptor)}");
+                    GD.PrintErr($"You can only assign {nameof(BaseNetworkAdaptor)}, {nameof(NetworkAdaptorWrapper)}, or {nameof(Godot)}.{nameof(GodotObject)} to {nameof(SyncManager)}.{nameof(NetworkAdaptor)}");
             }
         }
 
@@ -59,7 +58,7 @@ namespace GodotRollbackNetcode
         {
             get
             {
-                var source = (Godot.Object)Source.Get("message_serializer");
+                var source = (GodotObject)Source.Get("message_serializer");
                 if (source == null) return null;
                 if (source is IMessageSerializer messageSerializer) return messageSerializer;
                 if (messageSerializerWrapper == null || messageSerializerWrapper.Source != source)
@@ -72,10 +71,10 @@ namespace GodotRollbackNetcode
                     Source.Set("network_adaptor", @base);
                 else if (value is MessageSerializerWrapper wrapper)
                     Source.Set("network_adaptor", wrapper.Source);
-                else if (value is Godot.Object obj)
+                else if (value is GodotObject obj)
                     Source.Set("network_adaptor", obj);
                 else
-                    GD.PrintErr($"You can only assign {nameof(BaseMessageSerializer)}, {nameof(MessageSerializerWrapper)}, or {nameof(Godot)}.{nameof(Godot.Object)} to {nameof(SyncManager)}.{nameof(MessageSerializer)}");
+                    GD.PrintErr($"You can only assign {nameof(BaseMessageSerializer)}, {nameof(MessageSerializerWrapper)}, or {nameof(Godot)}.{nameof(GodotObject)} to {nameof(SyncManager)}.{nameof(MessageSerializer)}");
             }
         }
 
@@ -84,7 +83,7 @@ namespace GodotRollbackNetcode
         {
             get
             {
-                var source = (Godot.Object)Source.Get("hash_serializer");
+                var source = (GodotObject)Source.Get("hash_serializer");
                 if (source == null) return null;
                 if (source is IHashSerializer hashSerializer) return hashSerializer;
                 if (hashSerializerWrapper == null || hashSerializerWrapper.Source != source)
@@ -97,10 +96,10 @@ namespace GodotRollbackNetcode
                     Source.Set("network_adaptor", @base);
                 else if (value is HashSerializerWrapper wrapper)
                     Source.Set("network_adaptor", wrapper.Source);
-                else if (value is Godot.Object obj)
+                else if (value is GodotObject obj)
                     Source.Set("network_adaptor", obj);
                 else
-                    GD.PrintErr($"You can only assign {nameof(BaseHashSerializer)}, {nameof(HashSerializerWrapper)}, or {nameof(Godot)}.{nameof(Godot.Object)} to {nameof(SyncManager)}.{nameof(HashSerializer)}");
+                    GD.PrintErr($"You can only assign {nameof(BaseHashSerializer)}, {nameof(HashSerializerWrapper)}, or {nameof(Godot)}.{nameof(GodotObject)} to {nameof(SyncManager)}.{nameof(HashSerializer)}");
             }
         }
         #endregion
@@ -144,53 +143,53 @@ namespace GodotRollbackNetcode
             set => Source.Set("mechanized_input_received", value);
         }
 
-        public int MechanizedRollbackTicks
+        public long MechanizedRollbackTicks
         {
-            get => (int)Source.Get("mechanized_rollback_ticks");
+            get => (long)Source.Get("mechanized_rollback_ticks");
             set => Source.Set("mechanized_rollback_ticks", value);
         }
         #endregion
 
         #region General Variables
-        public int MaxBufferSize
+        public long MaxBufferSize
         {
-            get => (int)Source.Get("max_buffer_size");
+            get => (long)Source.Get("max_buffer_size");
             set => Source.Set("max_buffer_size", value);
         }
 
-        public int TicksToCalculateAdvantage
+        public long TicksToCalculateAdvantage
         {
-            get => (int)Source.Get("ticks_to_calculate_advantage");
+            get => (long)Source.Get("ticks_to_calculate_advantage");
             set => Source.Set("ticks_to_calculate_advantage", value);
         }
 
-        public int InputDelay
+        public long InputDelay
         {
-            get => (int)Source.Get("input_delay");
+            get => (long)Source.Get("input_delay");
             set => Source.Set("input_delay", value);
         }
 
-        public int MaxInputFramesPerMessage
+        public long MaxInputFramesPerMessage
         {
-            get => (int)Source.Get("max_input_frames_per_message");
+            get => (long)Source.Get("max_input_frames_per_message");
             set => Source.Set("max_input_frames_per_message", value);
         }
 
-        public int MaxMessagesAtOnce
+        public long MaxMessagesAtOnce
         {
-            get => (int)Source.Get("max_messages_at_once");
+            get => (long)Source.Get("max_messages_at_once");
             set => Source.Set("max_messages_at_once", value);
         }
 
-        public int MaxTicksToRegainSync
+        public long MaxTicksToRegainSync
         {
-            get => (int)Source.Get("max_ticks_to_regain_sync");
+            get => (long)Source.Get("max_ticks_to_regain_sync");
             set => Source.Set("max_ticks_to_regain_sync", value);
         }
 
-        public int MinLagToRegainSync
+        public long MinLagToRegainSync
         {
-            get => (int)Source.Get("min_lag_to_regain_sync");
+            get => (long)Source.Get("min_lag_to_regain_sync");
             set => Source.Set("min_lag_to_regain_sync", value);
         }
 
@@ -200,35 +199,35 @@ namespace GodotRollbackNetcode
             set => Source.Set("interpolation", value);
         }
 
-        public int MaxStateMismatchCount
+        public long MaxStateMismatchCount
         {
-            get => (int)Source.Get("max_state_mismatch_count");
+            get => (long)Source.Get("max_state_mismatch_count");
             set => Source.Set("max_state_mismatch_count", value);
         }
         #endregion
 
         #region Debug Variables
-        public int DebugrollbackTicks
+        public long DebugrollbackTicks
         {
-            get => (int)Source.Get("debug_rollback_ticks");
+            get => (long)Source.Get("debug_rollback_ticks");
             set => Source.Set("debug_rollback_ticks", value);
         }
 
-        public int DebugRandomRollbackTicks
+        public long DebugRandomRollbackTicks
         {
-            get => (int)Source.Get("debug_random_rollback_ticks");
+            get => (long)Source.Get("debug_random_rollback_ticks");
             set => Source.Set("debug_random_rollback_ticks", value);
         }
 
-        public int DebugMessageBytes
+        public long DebugMessageBytes
         {
-            get => (int)Source.Get("debug_message_bytes");
+            get => (long)Source.Get("debug_message_bytes");
             set => Source.Set("debug_message_bytes", value);
         }
 
-        public int DebugSkipNthMessage
+        public long DebugSkipNthMessage
         {
-            get => (int)Source.Get("debug_skip_nth_message");
+            get => (long)Source.Get("debug_skip_nth_message");
             set => Source.Set("debug_skip_nth_message", value);
         }
 
@@ -267,27 +266,27 @@ namespace GodotRollbackNetcode
         }
 
         #region Readonly Variables
-        public int InputTick => (int)Source.Get("input_tick");
-        public int CurrentTick => (int)Source.Get("current_tick");
-        public int SkipTicks => (int)Source.Get("skip_ticks");
-        public int RollbackTicks => (int)Source.Get("rollback_ticks");
-        public int RequestedInputCompleteTick => (int)Source.Get("requested_input_complete_tick");
+        public long InputTick => (long)Source.Get("input_tick");
+        public long CurrentTick => (long)Source.Get("current_tick");
+        public long SkipTicks => (long)Source.Get("skip_ticks");
+        public long RollbackTicks => (long)Source.Get("rollback_ticks");
+        public long RequestedInputCompleteTick => (long)Source.Get("requested_input_complete_tick");
         public bool Started => (bool)Source.Get("started");
         public float TickTime => (float)Source.Get("tick_time");
         #endregion
 
         public SyncManager() { }
 
-        public SyncManager(Godot.Object source) : base(source) { }
+        public SyncManager(GodotObject source) : base(source) { }
 
         #region Methods
         public void ResetNetworkAdaptor() => Source.Call("reset_network_adaptor");
 
-        public void AddPeer(int peerId) => Source.Call("add_peer", peerId);
+        public void AddPeer(long peerId) => Source.Call("add_peer", peerId);
 
-        public bool HasPeer(int peerId) => (bool)Source.Call("has_peer", peerId);
+        public bool HasPeer(long peerId) => (bool)Source.Call("has_peer", peerId);
 
-        public void RemovePeer(int peerid) => Source.Call("remove_peer", peerid);
+        public void RemovePeer(long peerid) => Source.Call("remove_peer", peerid);
 
         public void ClearPeers() => Source.Call("clear_peers");
 
@@ -326,9 +325,9 @@ namespace GodotRollbackNetcode
         public void PlaySound(string identifier, AudioStream sound, Vector2? position = null, float? volumeDb = null, float? pitchScale = null, string bus = null)
         {
             var info = new GDC.Dictionary();
-            if (position != null) info["position"] = position;
-            if (volumeDb != null) info["volume_db"] = volumeDb;
-            if (pitchScale != null) info["pitch_scale"] = pitchScale;
+            if (position != null) info["position"] = position.Value;
+            if (volumeDb != null) info["volume_db"] = volumeDb.Value;
+            if (pitchScale != null) info["pitch_scale"] = pitchScale.Value;
             if (bus != null) info["bus"] = bus;
             Source.Call("play_sound", identifier, sound, info);
         }
@@ -347,37 +346,37 @@ namespace GodotRollbackNetcode
         public delegate void SyncErrorDelegate(string message);
         public event SyncErrorDelegate SyncError;
 
-        public delegate void SkipTicksFlaggedDelegate(int count);
+        public delegate void SkipTicksFlaggedDelegate(long count);
         public event SkipTicksFlaggedDelegate SkipTicksFlagged;
 
-        public delegate void RollbackFlaggedDelegate(int tick);
+        public delegate void RollbackFlaggedDelegate(long tick);
         public event RollbackFlaggedDelegate RollbackFlagged;
 
-        public delegate void PredictionMissedDelegate(int tick, int peerId, GDC.Dictionary localInput, GDC.Dictionary remoteInput);
+        public delegate void PredictionMissedDelegate(long tick, long peerId, GDC.Dictionary localInput, GDC.Dictionary remoteInput);
         public event PredictionMissedDelegate PredictionMissed;
 
-        public delegate void RemoteStateMismatchDelegate(int tick, int peerId, int localHash, int remoteHash);
+        public delegate void RemoteStateMismatchDelegate(long tick, long peerId, long localHash, long remoteHash);
         public event RemoteStateMismatchDelegate RemoteStateMismatch;
 
-        public delegate void PeerAddedDelegate(int peerId);
+        public delegate void PeerAddedDelegate(long peerId);
         public event PeerAddedDelegate PeerAdded;
 
-        public delegate void PeerRemovedDelegate(int peerId);
+        public delegate void PeerRemovedDelegate(long peerId);
         public event PeerRemovedDelegate PeerRemoved;
 
-        public delegate void PeerPingedBackDelegate(Godot.Object peer);
+        public delegate void PeerPingedBackDelegate(GodotObject peer);
         public event PeerPingedBackDelegate PeerPingedBack;
 
-        public delegate void StatedLoadedDelegate(int rollbackTicks);
+        public delegate void StatedLoadedDelegate(long rollbackTicks);
         public event StatedLoadedDelegate StateLoaded;
 
         public delegate void TickFinishedDelegate(bool isRollback);
         public event TickFinishedDelegate TickFinished;
 
-        public delegate void TickRetiredDelegate(int tick);
+        public delegate void TickRetiredDelegate(long tick);
         public event TickRetiredDelegate TickRetired;
 
-        public delegate void TickInputCompleteDelegate(int tick);
+        public delegate void TickInputCompleteDelegate(long tick);
         public event TickInputCompleteDelegate TickInputComplete;
 
         public delegate void SceneSpawnedDelegate(string name, Node spawnedNode, PackedScene scene, GDC.Dictionary data);
@@ -392,28 +391,28 @@ namespace GodotRollbackNetcode
         #region Signal Forwarding
         protected override void ForwardSignalsToEvents()
         {
-            Source.Connect("sync_started", this, nameof(OnSyncStarted));
-            Source.Connect("sync_stopped", this, nameof(OnSyncStopped));
-            Source.Connect("sync_lost", this, nameof(OnSyncLost));
-            Source.Connect("sync_regained", this, nameof(OnSyncRegained));
-            Source.Connect("sync_error", this, nameof(OnSyncError));
+            Source.Connect("sync_started", new Callable(this, nameof(OnSyncStarted)));
+            Source.Connect("sync_stopped", new Callable(this, nameof(OnSyncStopped)));
+            Source.Connect("sync_lost", new Callable(this, nameof(OnSyncLost)));
+            Source.Connect("sync_regained", new Callable(this, nameof(OnSyncRegained)));
+            Source.Connect("sync_error", new Callable(this, nameof(OnSyncError)));
 
-            Source.Connect("skip_ticks_flagged", this, nameof(OnSkipTicksFlagged));
-            Source.Connect("rollback_flagged", this, nameof(OnRollbackFlagged));
-            Source.Connect("prediction_missed", this, nameof(OnPredictionMissed));
-            Source.Connect("remote_state_mismatch", this, nameof(OnRemoteStateMismatch));
+            Source.Connect("skip_ticks_flagged", new Callable(this, nameof(OnSkipTicksFlagged)));
+            Source.Connect("rollback_flagged", new Callable(this, nameof(OnRollbackFlagged)));
+            Source.Connect("prediction_missed", new Callable(this, nameof(OnPredictionMissed)));
+            Source.Connect("remote_state_mismatch", new Callable(this, nameof(OnRemoteStateMismatch)));
 
-            Source.Connect("peer_added", this, nameof(OnPeerAdded));
-            Source.Connect("peer_removed", this, nameof(OnPeerRemoved));
-            Source.Connect("peer_pinged_back", this, nameof(OnPeerPingedBack));
+            Source.Connect("peer_added", new Callable(this, nameof(OnPeerAdded)));
+            Source.Connect("peer_removed", new Callable(this, nameof(OnPeerRemoved)));
+            Source.Connect("peer_pinged_back", new Callable(this, nameof(OnPeerPingedBack)));
 
-            Source.Connect("state_loaded", this, nameof(OnStateLoaded));
-            Source.Connect("tick_finished", this, nameof(OnTickFinished));
-            Source.Connect("tick_retired", this, nameof(OnTickRetired));
-            Source.Connect("tick_input_complete", this, nameof(OnTickInputComplete));
-            Source.Connect("scene_spawned", this, nameof(OnSceneSpawned));
-            Source.Connect("scene_despawned", this, nameof(OnSceneDespawned));
-            Source.Connect("interpolation_frame", this, nameof(OnInterpolationFrame));
+            Source.Connect("state_loaded", new Callable(this, nameof(OnStateLoaded)));
+            Source.Connect("tick_finished", new Callable(this, nameof(OnTickFinished)));
+            Source.Connect("tick_retired", new Callable(this, nameof(OnTickRetired)));
+            Source.Connect("tick_input_complete", new Callable(this, nameof(OnTickInputComplete)));
+            Source.Connect("scene_spawned", new Callable(this, nameof(OnSceneSpawned)));
+            Source.Connect("scene_despawned", new Callable(this, nameof(OnSceneDespawned)));
+            Source.Connect("interpolation_frame", new Callable(this, nameof(OnInterpolationFrame)));
         }
 
         private void OnInterpolationFrame()
@@ -431,12 +430,12 @@ namespace GodotRollbackNetcode
             SceneSpawned?.Invoke(name, spawnedNode, scene, data);
         }
 
-        private void OnTickInputComplete(int tick)
+        private void OnTickInputComplete(long tick)
         {
             TickInputComplete?.Invoke(tick);
         }
 
-        private void OnTickRetired(int tick)
+        private void OnTickRetired(long tick)
         {
             TickRetired?.Invoke(tick);
         }
@@ -446,42 +445,42 @@ namespace GodotRollbackNetcode
             TickFinished?.Invoke(isRollback);
         }
 
-        private void OnStateLoaded(int rollbackTicks)
+        private void OnStateLoaded(long rollbackTicks)
         {
             StateLoaded?.Invoke(rollbackTicks);
         }
 
-        private void OnPeerPingedBack(Godot.Object peer)
+        private void OnPeerPingedBack(GodotObject peer)
         {
             PeerPingedBack?.Invoke(peer);
         }
 
-        private void OnPeerRemoved(int peerId)
+        private void OnPeerRemoved(long peerId)
         {
             PeerRemoved?.Invoke(peerId);
         }
 
-        private void OnPeerAdded(int peerId)
+        private void OnPeerAdded(long peerId)
         {
             PeerAdded?.Invoke(peerId);
         }
 
-        private void OnRemoteStateMismatch(int tick, int peerId, int localHash, int remoteHash)
+        private void OnRemoteStateMismatch(long tick, long peerId, long localHash, long remoteHash)
         {
             RemoteStateMismatch?.Invoke(tick, peerId, localHash, remoteHash);
         }
 
-        private void OnPredictionMissed(int tick, int peerId, GDC.Dictionary localInput, GDC.Dictionary remoteInput)
+        private void OnPredictionMissed(long tick, long peerId, GDC.Dictionary localInput, GDC.Dictionary remoteInput)
         {
             PredictionMissed?.Invoke(tick, peerId, localInput, remoteInput);
         }
 
-        private void OnRollbackFlagged(int tick)
+        private void OnRollbackFlagged(long tick)
         {
             RollbackFlagged?.Invoke(tick);
         }
 
-        private void OnSkipTicksFlagged(int count)
+        private void OnSkipTicksFlagged(long count)
         {
             SkipTicksFlagged?.Invoke(count);
         }

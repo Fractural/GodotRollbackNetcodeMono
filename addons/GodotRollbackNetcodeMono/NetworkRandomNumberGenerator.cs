@@ -1,12 +1,11 @@
-﻿using Fractural.Commons;
-using Fractural.Utils;
 using Godot;
 using Godot.Collections;
 
 namespace GodotRollbackNetcode
 {
-    [RegisteredType(nameof(NetworkRandomNumberGenerator), "res://addons/GodotRollbackNetcodeMono/Assets/NetworkRNG.svg")]
-    public class NetworkRandomNumberGenerator : Node, INetworkSerializable
+    [GlobalClass]
+    [Icon("res://addons/GodotRollbackNetcodeMono/Assets/NetworkRNG.svg")]
+    public partial class NetworkRandomNumberGenerator : Node, INetworkSerializable
     {
         private RandomNumberGenerator generator;
 
@@ -37,7 +36,7 @@ namespace GodotRollbackNetcode
         {
             return new Dictionary()
             {
-                ["state"] = generator.State.Serialize()
+                ["state"] = generator.State.SerializePrimitive()
             };
         }
 

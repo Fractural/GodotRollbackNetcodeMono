@@ -1,4 +1,3 @@
-﻿using Fractural.Utils;
 using Godot;
 using GDDictionary = Godot.Collections.Dictionary;
 
@@ -17,20 +16,20 @@ namespace GodotRollbackNetcode
         void SendInputTick(int peerId, byte[] msg);
         bool IsNetworkHost();
         bool IsNetworkMasterForNode(Node node);
-        int GetNetworkUniqueId();
+        int GetUniqueId();
     }
 
-    public abstract class BaseNetworkAdaptor : Godot.Reference, INetworkAdaptor
+    public abstract partial class BaseNetworkAdaptor : Godot.RefCounted, INetworkAdaptor
     {
-        private void attach_network_adaptor(Godot.Object sync_manager) => AttachNetworkAdaptor(sync_manager.AsWrapper<SyncManager>());
+        private void attach_network_adaptor(GodotObject sync_manager) => AttachNetworkAdaptor(sync_manager.AsWrapper<SyncManager>());
 
         public virtual void AttachNetworkAdaptor(SyncManager syncManager) { }
 
-        private void detach_network_adaptor(Godot.Object sync_manager) => DetachNetworkAdaptor(sync_manager.AsWrapper<SyncManager>());
+        private void detach_network_adaptor(GodotObject sync_manager) => DetachNetworkAdaptor(sync_manager.AsWrapper<SyncManager>());
 
         public virtual void DetachNetworkAdaptor(SyncManager syncManager) { }
 
-        private void stop_network_adaptor(Godot.Object sync_manager) => StopNetworkAdaptor(sync_manager.AsWrapper<SyncManager>());
+        private void stop_network_adaptor(GodotObject sync_manager) => StopNetworkAdaptor(sync_manager.AsWrapper<SyncManager>());
 
         public virtual void StopNetworkAdaptor(SyncManager syncManager) { }
 
@@ -66,8 +65,8 @@ namespace GodotRollbackNetcode
 
         public abstract bool IsNetworkMasterForNode(Node node);
 
-        private int get_network_unique_id() => GetNetworkUniqueId();
+        private int get_network_unique_id() => GetUniqueId();
 
-        public abstract int GetNetworkUniqueId();
+        public abstract int GetUniqueId();
     }
 }

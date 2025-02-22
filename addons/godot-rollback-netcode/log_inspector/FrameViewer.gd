@@ -1,17 +1,17 @@
-tool
+@tool
 extends Control
 
 const Logger = preload("res://addons/godot-rollback-netcode/Logger.gd")
 const ReplayServer = preload("res://addons/godot-rollback-netcode/log_inspector/ReplayServer.gd")
 const LogData = preload("res://addons/godot-rollback-netcode/log_inspector/LogData.gd")
 
-onready var time_field = $VBoxContainer/HBoxContainer/Time
-onready var seek_on_replay_peer_field = $VBoxContainer/HBoxContainer/SeekOnReplayPeerField
-onready var auto_replay_to_current_field = $VBoxContainer/HBoxContainer/ReplayContainer/HBoxContainer/AutoReplayToCurrentField
-onready var replay_to_current_button = $VBoxContainer/HBoxContainer/ReplayContainer/HBoxContainer/ReplayToCurrentButton
-onready var data_graph = $VBoxContainer/VSplitContainer/DataGraph
-onready var data_grid = $VBoxContainer/VSplitContainer/DataGrid
-onready var settings_dialog = $SettingsDialog
+@onready var time_field = $VBoxContainer/HBoxContainer/Time
+@onready var seek_on_replay_peer_field = $VBoxContainer/HBoxContainer/SeekOnReplayPeerField
+@onready var auto_replay_to_current_field = $VBoxContainer/HBoxContainer/ReplayContainer/HBoxContainer/AutoReplayToCurrentField
+@onready var replay_to_current_button = $VBoxContainer/HBoxContainer/ReplayContainer/HBoxContainer/ReplayToCurrentButton
+@onready var data_graph = $VBoxContainer/VSplitContainer/DataGraph
+@onready var data_grid = $VBoxContainer/VSplitContainer/DataGrid
+@onready var settings_dialog = $SettingsDialog
 
 var log_data: LogData
 var replay_server: ReplayServer
@@ -30,24 +30,24 @@ func set_log_data(_log_data: LogData) -> void:
 func refresh_from_log_data() -> void:
 	if log_data.is_loading():
 		return
-	
+
 	time_field.max_value = log_data.end_time - log_data.start_time
-	
+
 	data_graph.refresh_from_log_data()
 	data_grid.refresh_from_log_data()
 	settings_dialog.refresh_from_log_data()
-	
+
 	replay_frame = -1
 	_on_Time_value_changed(time_field.value)
 
 func set_replay_server(_replay_server: ReplayServer) -> void:
 	if replay_server != null:
-		replay_server.disconnect("game_disconnected", self, "_on_replay_server_game_disconnected")
-	
+		replay_server.game_disconnected.disconnect(self._on_replay_server_game_disconnected)
+
 	replay_server = _replay_server
-	
+
 	if replay_server:
-		replay_server.connect("game_disconnected", self, "_on_replay_server_game_disconnected")
+		replay_server.game_disconnected.connect(self._on_replay_server_game_disconnected)
 
 func _on_replay_server_game_disconnected() -> void:
 	replay_frame = -1
@@ -67,9 +67,9 @@ func clear() -> void:
 func _on_Time_value_changed(value: float) -> void:
 	if log_data.is_loading():
 		return
-	
+
 	var time := int(value)
-	
+
 	# Update our tracking of the current frame.
 	for peer_id in log_data.peer_ids:
 		var frame: LogData.FrameData = log_data.get_frame_by_time(peer_id, log_data.start_time + time)
@@ -77,10 +77,10 @@ func _on_Time_value_changed(value: float) -> void:
 			current_frames[peer_id] = frame.frame
 		else:
 			current_frames[peer_id] = 0
-	
+
 	data_graph.cursor_time = time
 	data_grid.cursor_time = time
-	
+
 	if auto_replay_to_current_field.pressed:
 		replay_to_current_frame()
 
@@ -90,15 +90,15 @@ func _on_PreviousFrameButton_pressed() -> void:
 func jump_to_previous_frame() -> void:
 	if log_data.is_loading():
 		return
-	
+
 	var frame_time := 0
-	
+
 	if seek_on_replay_peer_field.pressed:
 		frame_time = _get_previous_frame_time_for_peer(replay_peer_id)
 	else:
 		for peer_id in current_frames:
 			frame_time = int(max(frame_time, _get_previous_frame_time_for_peer(peer_id)))
-	
+
 	if frame_time > log_data.start_time:
 		time_field.value = frame_time - log_data.start_time
 	else:
@@ -117,9 +117,9 @@ func _on_NextFrameButton_pressed() -> void:
 func jump_to_next_frame() -> void:
 	if log_data.is_loading():
 		return
-	
+
 	var frame_time := log_data.end_time
-	
+
 	if seek_on_replay_peer_field.pressed:
 		frame_time = _get_next_frame_time_for_peer(replay_peer_id)
 	else:
@@ -127,7 +127,7 @@ func jump_to_next_frame() -> void:
 			var peer_frame_time = _get_next_frame_time_for_peer(peer_id)
 			if peer_frame_time != 0:
 				frame_time = int(min(frame_time, _get_next_frame_time_for_peer(peer_id)))
-	
+
 	if frame_time > log_data.start_time:
 		time_field.value = frame_time - log_data.start_time
 	else:
@@ -150,18 +150,18 @@ func replay_to_current_frame() -> void:
 		return
 	if not current_frames.has(replay_peer_id):
 		return
-	
+
 	var current_frame_id: int = current_frames[replay_peer_id]
-	
+
 	# If replay_frame is ahead of current frame, we have to replay from the beginning.
 	if replay_frame > current_frame_id:
 		replay_frame = -1
-	
+
 	# Reset replay.
 	if replay_frame == -1:
 		replay_last_interpolation_frame_time = 0
 		replay_server.send_match_info(log_data, replay_peer_id)
-	
+
 	replay_frame += 1
 	for frame_id in range(replay_frame, log_data.frames[replay_peer_id].size()):
 		if frame_id > current_frame_id:
@@ -171,20 +171,20 @@ func replay_to_current_frame() -> void:
 			# Don't replay skipped ticks.
 			continue
 		_send_replay_frame_data(frame_data)
-	
+
 	replay_frame = current_frame_id
 
 func _send_replay_frame_data(frame_data: LogData.FrameData) -> void:
 	var frame_type: int = frame_data.data['frame_type']
-	
+
 	var msg := {
 		type = "execute_frame",
 		frame_type = frame_type,
 		rollback_ticks = frame_data.data.get('rollback_ticks', 0),
 	}
-	
+
 	var input_frames_received := {}
-	
+
 	if frame_type == Logger.FrameType.TICK:
 		var tick = int(frame_data.data['tick'])
 		if tick > 0:
@@ -202,7 +202,7 @@ func _send_replay_frame_data(frame_data: LogData.FrameData) -> void:
 			# bigger than zero, arbitrarily 1.0/120.0
 			msg['delta'] = 0.00833333
 		replay_last_interpolation_frame_time = start_time
-	
+
 	# Get input received from each of the peers.
 	for peer_id in log_data.peer_ids:
 		var ticks: Array = frame_data.data.get("remote_ticks_received_from_%s" % peer_id, [])
@@ -213,18 +213,18 @@ func _send_replay_frame_data(frame_data: LogData.FrameData) -> void:
 				peer_input_ticks[tick] = log_data.input[tick].get_input_for_peer(peer_id, replay_peer_id)
 			input_frames_received[peer_id] = peer_input_ticks
 	msg['input_frames_received'] = input_frames_received
-	
+
 	replay_server.send_message(msg)
 
-func _unhandled_key_input(event: InputEventKey) -> void:
+func _unhandled_key_input(event: InputEvent) -> void:
 	if event.pressed:
-		if event.scancode == KEY_PAGEUP:
+		if event.keycode == KEY_PAGEUP:
 			jump_to_next_frame()
-		elif event.scancode == KEY_PAGEDOWN:
+		elif event.keycode == KEY_PAGEDOWN:
 			jump_to_previous_frame()
-		elif event.scancode == KEY_UP:
+		elif event.keycode == KEY_UP:
 			time_field.value += 1
-		elif event.scancode == KEY_DOWN:
+		elif event.keycode == KEY_DOWN:
 			time_field.value -= 1
 
 func _on_StartButton_pressed() -> void:

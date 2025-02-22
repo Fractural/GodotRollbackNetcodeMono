@@ -1,4 +1,4 @@
-﻿using GDDictionary = Godot.Collections.Dictionary;
+using GDDictionary = Godot.Collections.Dictionary;
 
 namespace GodotRollbackNetcode
 {

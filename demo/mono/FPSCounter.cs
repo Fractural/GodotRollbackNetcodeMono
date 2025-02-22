@@ -1,10 +1,10 @@
-﻿using Godot;
+using Godot;
 
 namespace Game
 {
-    public class FPSCounter : Label
+    public partial class FPSCounter : Label
     {
-        public override void _Process(float delta)
+        public override void _Process(double delta)
         {
             Text = Engine.GetFramesPerSecond() + " FPS";
         }

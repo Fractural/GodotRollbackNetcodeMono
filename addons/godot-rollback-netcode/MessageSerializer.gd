@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 static func is_type(obj: Object):
 	return obj.has_method("serialize_input") \
@@ -15,13 +15,13 @@ enum InputMessageKey {
 	STATE_HASHES,
 }
 
-func serialize_input(input: Dictionary) -> PoolByteArray:
-	return var2bytes(input)
+func serialize_input(input: Dictionary) -> PackedByteArray:
+	return var_to_bytes(input)
 
-func unserialize_input(serialized: PoolByteArray) -> Dictionary:
-	return bytes2var(serialized)
+func unserialize_input(serialized: PackedByteArray) -> Dictionary:
+	return bytes_to_var(serialized)
 
-func serialize_message(msg: Dictionary) -> PoolByteArray:
+func serialize_message(msg: Dictionary) -> PackedByteArray:
 	var buffer := StreamPeerBuffer.new()
 	buffer.resize(DEFAULT_MESSAGE_BUFFER_SIZE)
 

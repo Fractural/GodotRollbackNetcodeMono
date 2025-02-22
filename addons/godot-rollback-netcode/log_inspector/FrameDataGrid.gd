@@ -1,11 +1,11 @@
-tool
+@tool
 extends Tree
 
 const Logger = preload("res://addons/godot-rollback-netcode/Logger.gd")
 const LogData = preload("res://addons/godot-rollback-netcode/log_inspector/LogData.gd")
 
 var log_data: LogData
-var cursor_time: int = -1 setget set_cursor_time
+var cursor_time: int = -1: set = set_cursor_time
 
 enum PropertyType {
 	BASIC,
@@ -51,32 +51,32 @@ func _ready() -> void:
 	_property_definitions['timings'] = {
 		type = PropertyType.SKIPPED,
 	}
-	
+
 	refresh_from_log_data()
 
 func refresh_from_log_data() -> void:
 	clear()
 	var root = create_item()
-	
+
 	if log_data == null or log_data.is_loading() or log_data.peer_ids.size() == 0:
 		set_column_titles_visible(false)
 		var empty = create_item(root)
 		empty.set_text(0, "No data.")
 		return
-	
+
 	var frames := {}
 	var prop_names := []
 	var extra_prop_names := []
 	var index: int
-	
+
 	columns = log_data.peer_ids.size() + 1
 	set_column_titles_visible(true)
-	
+
 	index = 1
 	for peer_id in log_data.peer_ids:
 		set_column_title(index, "Peer %s" % peer_id)
 		index += 1
-		
+
 		var frame: LogData.FrameData = log_data.get_frame_by_time(peer_id, log_data.start_time + cursor_time)
 		frames[peer_id] = frame
 		if frame:
@@ -86,7 +86,7 @@ func refresh_from_log_data() -> void:
 						extra_prop_names.append(prop_name)
 				elif not prop_name in prop_names:
 					prop_names.append(prop_name)
-	
+
 	for prop_name in _property_definitions:
 		if not prop_name in prop_names:
 			continue
@@ -96,25 +96,25 @@ func refresh_from_log_data() -> void:
 			continue
 		var row = create_item(root)
 		row.set_text(0, prop_def.get('label', prop_name.capitalize()))
-		
+
 		index = 1
 		for peer_id in log_data.peer_ids:
 			var frame = frames[peer_id]
 			if frame:
 				row.set_text(index, _prop_to_string(frame.data, prop_name, prop_def))
 			index += 1
-	
+
 	for prop_name in extra_prop_names:
 		var row = create_item(root)
 		row.set_text(0, prop_name.capitalize())
-		
+
 		index = 1
 		for peer_id in log_data.peer_ids:
 			var frame = frames[peer_id]
 			if frame:
 				row.set_text(index, _prop_to_string(frame.data, prop_name, {}))
 			index += 1
-	
+
 	if 'timings' in prop_names:
 		var timings_root = create_item(root)
 		timings_root.set_text(0, "Timings")
@@ -124,23 +124,23 @@ func _prop_to_string(data: Dictionary, prop_name: String, prop_def = null) -> St
 	if prop_def == null:
 		prop_def = _property_definitions.get(prop_name, {})
 	var prop_type = prop_def.get('type', PropertyType.BASIC)
-	
+
 	var value = data.get(prop_name, prop_def.get('default', null))
-	
+
 	match prop_type:
 		PropertyType.ENUM:
 			if value != null and prop_def.has('values'):
 				var values = prop_def['values']
 				if value >= 0 and value < values.size():
 					value = values[value]
-		
+
 		PropertyType.BASIC:
 			if prop_def.has('values'):
 				value = prop_def['values'].get(value, value)
-		
+
 		PropertyType.TIME:
 			if value != null:
-				var datetime = OS.get_datetime_from_unix_time(value / 1000)
+				var datetime = Time.get_datetime_dict_from_unix_time(value / 1000)
 				value = "%04d-%02d-%02d %02d:%02d:%02d" % [
 					datetime['year'],
 					datetime['month'],
@@ -149,14 +149,14 @@ func _prop_to_string(data: Dictionary, prop_name: String, prop_def = null) -> St
 					datetime['minute'],
 					datetime['second'],
 				]
-	
+
 	if value == null:
 		return ''
-	
+
 	value = str(value)
 	if prop_def.has('suffix'):
 		value += prop_def['suffix']
-	
+
 	return value
 
 func _add_timings(root: TreeItem, frames: Dictionary) -> void:
@@ -166,10 +166,10 @@ func _add_timings(root: TreeItem, frames: Dictionary) -> void:
 		if frame:
 			for key in frame.data.get('timings', {}):
 				all_timings[key] = true
-	
+
 	var all_timings_names = all_timings.keys()
 	all_timings_names.sort()
-	
+
 	var items := {}
 	for timing_name in all_timings_names:
 		var timing_name_parts = timing_name.split('.')
@@ -190,11 +190,11 @@ func _add_timings(root: TreeItem, frames: Dictionary) -> void:
 func _create_nested_item(name_parts: Array, root: TreeItem, items: Dictionary) -> TreeItem:
 	if name_parts.size() == 0:
 		return null
-	
-	var name = PoolStringArray(name_parts).join('.')
+
+	var name = '.'.join(PackedStringArray(name_parts))
 	if items.has(name):
 		return items[name]
-	
+
 	var item: TreeItem
 	if name_parts.size() == 1:
 		item = create_item(root)
@@ -202,9 +202,9 @@ func _create_nested_item(name_parts: Array, root: TreeItem, items: Dictionary) -
 		var parent_parts = name_parts.slice(0, name_parts.size() - 2)
 		var parent: TreeItem = _create_nested_item(parent_parts, root, items)
 		item = create_item(parent)
-	
+
 	item.set_text(0, name_parts[name_parts.size() - 1].capitalize())
 	item.collapsed = true
 	items[name] = item
-	
+
 	return item

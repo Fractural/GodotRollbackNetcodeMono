@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 var start_timings := {}
 var timings := {}
@@ -8,11 +8,11 @@ func clear() -> void:
 	timings.clear()
 
 func start(name: String) -> void:
-	start_timings[name] = OS.get_ticks_usec()
+	start_timings[name] = Time.get_ticks_usec()
 
 func stop(name: String) -> void:
 	assert(start_timings.has(name), "stop() without start() for %s" % name)
-	timings[name] = OS.get_ticks_usec() - start_timings[name]
+	timings[name] = Time.get_ticks_usec() - start_timings[name]
 	start_timings.erase(name)
 
 func get_total() -> int:

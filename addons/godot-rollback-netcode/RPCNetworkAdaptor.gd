@@ -1,45 +1,49 @@
 extends "res://addons/godot-rollback-netcode/NetworkAdaptor.gd"
 
 func send_ping(peer_id: int, msg: Dictionary) -> void:
-	rpc_unreliable_id(peer_id, "_remote_ping", msg)
+	_remote_ping.rpc_id(peer_id, msg)
 
-remote func _remote_ping(msg: Dictionary) -> void:
-	var peer_id = get_tree().get_rpc_sender_id()
-	emit_signal("received_ping", peer_id, msg)
+@rpc("any_peer", "unreliable")
+func _remote_ping(msg: Dictionary) -> void:
+	var peer_id = multiplayer.get_remote_sender_id()
+	received_ping.emit(peer_id, msg)
 
 func send_ping_back(peer_id: int, msg: Dictionary) -> void:
-	rpc_unreliable_id(peer_id, "_remote_ping_back", msg)
+	_remote_ping_back.rpc_id(peer_id, msg)
 
-remote func _remote_ping_back(msg: Dictionary) -> void:
-	var peer_id = get_tree().get_rpc_sender_id()
-	emit_signal("received_ping_back", peer_id, msg)
+@rpc("any_peer", "unreliable")
+func _remote_ping_back(msg: Dictionary) -> void:
+	var peer_id = multiplayer.get_remote_sender_id()
+	received_ping_back.emit(peer_id, msg)
 
 func send_remote_start(peer_id: int) -> void:
-	rpc_id(peer_id, "_remote_start")
+	_remote_start.rpc_id(peer_id)
 
-remote func _remote_start() -> void:
-	emit_signal("received_remote_start")
+@rpc("any_peer")
+func _remote_start() -> void:
+	received_remote_start.emit()
 
 func send_remote_stop(peer_id: int) -> void:
-	rpc_id(peer_id, "_remote_stop")
+	_remote_stop.rpc_id(peer_id)
 
-remote func _remote_stop() -> void:
-	emit_signal("received_remote_stop")
+@rpc("any_peer")
+func _remote_stop() -> void:
+	received_remote_stop.emit()
 
-func send_input_tick(peer_id: int, msg: PoolByteArray) -> void:
-	rpc_unreliable_id(peer_id, '_rit', msg)
+func send_input_tick(peer_id: int, msg: PackedByteArray) -> void:
+	_rit.rpc_id(peer_id, msg)
 
 func is_network_host() -> bool:
-	return get_tree().is_network_server()
+	return multiplayer.is_server()
 
 func is_network_master_for_node(node: Node) -> bool:
-	return node.is_network_master()
+	return node.is_multiplayer_authority()
 
-func get_network_unique_id() -> int:
-	return get_tree().get_network_unique_id()
+func get_unique_id() -> int:
+	return multiplayer.get_unique_id()
 
 # _rit is short for _receive_input_tick. The method name ends up in each message
 # so, we're trying to keep it short.
-remote func _rit(msg: PoolByteArray) -> void:
-	emit_signal("received_input_tick", get_tree().get_rpc_sender_id(), msg)
-
+@rpc("any_peer", "unreliable")
+func _rit(msg: PackedByteArray) -> void:
+	received_input_tick.emit(multiplayer.get_remote_sender_id(), msg)

@@ -1,17 +1,16 @@
-﻿using Fractural;
 using Godot;
 using Godot.Collections;
 
 namespace GodotRollbackNetcode
 {
-    public class NetworkAdaptorWrapper : GDScriptWrapper, INetworkAdaptor
+    public partial class NetworkAdaptorWrapper : GDScriptWrapper, INetworkAdaptor
     {
         public NetworkAdaptorWrapper() { }
-        public NetworkAdaptorWrapper(Godot.Object source) : base(source) { }
+        public NetworkAdaptorWrapper(GodotObject source) : base(source) { }
 
         public void AttachNetworkAdaptor(SyncManager syncManager) => Source.Call("attach_network_adaptor", syncManager.Source);
         public void DetachNetworkAdaptor(SyncManager syncManager) => Source.Call("detach_network_adaptor", syncManager.Source);
-        public int GetNetworkUniqueId() => (int)Source.Call("get_network_unique_id");
+        public int GetUniqueId() => (int)Source.Call("get_unique_id");
         public bool IsNetworkHost() => (bool)Source.Call("is_network_host");
         public bool IsNetworkMasterForNode(Node node) => (bool)Source.Call("is_network_master_for_node", node);
         public void Poll() => Source.Call("poll");
@@ -20,6 +19,7 @@ namespace GodotRollbackNetcode
         public void SendPingBack(int peerId, Dictionary msg) => Source.Call("send_ping_back", peerId, msg);
         public void SendRemoteStart(int peerId) => Source.Call("send_remote_start", peerId);
         public void SendRemoteStop(int peerId) => Source.Call("send_remote_stop", peerId);
+        public void StartNetworkAdaptor(SyncManager syncManager) => Source.Call("start_network_adaptor", syncManager.Source);
         public void StopNetworkAdaptor(SyncManager syncManager) => Source.Call("stop_network_adaptor", syncManager.Source);
     }
 }

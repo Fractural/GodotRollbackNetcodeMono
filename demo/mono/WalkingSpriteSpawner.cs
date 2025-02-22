@@ -1,8 +1,8 @@
-﻿using Godot;
+using Godot;
 
 namespace Game
 {
-    public class WalkingSpriteSpawner : Node
+    public partial class WalkingSpriteSpawner : Node
     {
         [Export]
         private PackedScene _walkingSpritePrefab;
@@ -19,14 +19,14 @@ namespace Game
         {
             var rng = new RandomNumberGenerator();
             rng.Seed = (ulong)_seed;
-            var screenSize = OS.GetScreenSize();
+            var screenSize = DisplayServer.WindowGetSize();
             for (int i = 0; i < _spawnAmount; i++)
             {
-                var pos = new Vector2(rng.RandiRange(_padding, (int)screenSize.x - _padding), rng.RandiRange(_padding, (int)screenSize.y - _padding));
+                var pos = new Vector2(rng.RandiRange(_padding, screenSize.X - _padding), rng.RandiRange(_padding, screenSize.Y - _padding));
                 var direction = new Vector2(rng.RandfRange(-1, 1), rng.RandfRange(-1, 1)).Normalized();
-                var speed = rng.RandfRange(_speedRange.x, _speedRange.y);
+                var speed = rng.RandfRange(_speedRange.X, _speedRange.Y);
 
-                var instance = _walkingSpritePrefab.Instance<WalkingSprite>();
+                var instance = _walkingSpritePrefab.Instantiate<WalkingSprite>();
                 AddChild(instance);
                 instance.Construct(pos, speed, direction);
             }

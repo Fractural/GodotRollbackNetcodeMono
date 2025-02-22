@@ -1,11 +1,11 @@
 extends Control
 
-onready var peer_id_field = $VBoxContainer/GridContainer/PeerIdValue
-onready var rtt_field = $VBoxContainer/GridContainer/RTTValue
-onready var local_lag_field = $VBoxContainer/GridContainer/LocalLagValue
-onready var remote_lag_field = $VBoxContainer/GridContainer/RemoteLagValue
-onready var advantage_field = $VBoxContainer/GridContainer/AdvantageValue
-onready var messages_field = $VBoxContainer/MessagesValue
+@onready var peer_id_field = $VBoxContainer/GridContainer/PeerIdValue
+@onready var rtt_field = $VBoxContainer/GridContainer/RTTValue
+@onready var local_lag_field = $VBoxContainer/GridContainer/LocalLagValue
+@onready var remote_lag_field = $VBoxContainer/GridContainer/RemoteLagValue
+@onready var advantage_field = $VBoxContainer/GridContainer/AdvantageValue
+@onready var messages_field = $VBoxContainer/MessagesValue
 
 func update_peer(peer: SyncManager.Peer) -> void:
 	peer_id_field.text = str(peer.peer_id)

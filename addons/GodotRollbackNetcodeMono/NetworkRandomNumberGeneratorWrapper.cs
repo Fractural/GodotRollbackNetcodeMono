@@ -1,10 +1,8 @@
-﻿using Fractural;
-using Fractural.Utils;
 using Godot;
 
 namespace GodotRollbackNetcode
 {
-    public class NetworkRandomNumberGeneratorWrapper : GDScriptWrapper
+    public partial class NetworkRandomNumberGeneratorWrapper : GDScriptWrapper
     {
         public RandomNumberGenerator Generator => Source.Get<RandomNumberGenerator>("generator");
         public ulong Seed { get => Generator.Seed; set => Generator.Seed = value; }
