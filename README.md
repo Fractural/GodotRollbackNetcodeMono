@@ -44,9 +44,9 @@ To fetch GDScript nodes, you can use the `GetNodeAsWrapper` extension method pro
 
 public override _Ready()
 {
-    NetworkTimer timer = this.GetNodeAsWrapper<NetworkTimer>("Timer");
-    NetworkRandomNumberGenerator rng = this.GetNodeAsWrapper<NetworkRandomNumberGenerator>("SomeNode/Rng");
-    NetworkAnimationPlayer animationPlayer = this.GetNodeAsWrapper<NetworkAnimationPlayer>("AnimationPlayer");
+    NetworkTimerWrapper timer = this.GetNodeAsWrapper<NetworkTimerWrapper>("Timer");
+    NetworkRandomNumberGeneratorWrapper rng = this.GetNodeAsWrapper<NetworkRandomNumberGeneratorWrapper>("SomeNode/Rng");
+    NetworkAnimationPlayerWrapper animationPlayer = this.GetNodeAsWrapper<NetworkAnimationPlayerWrapper>("AnimationPlayer");
 }
 ```
 
@@ -55,7 +55,7 @@ Signals are forwarded to C# events, but you may also use the `Connect` method di
 ```CSharp
 public override _Ready()
 {
-    NetworkTimer timer = this.GetNodeAsWrapper<NetworkTimer>("Timer");
+    NetworkTimerWrapper timer = this.GetNodeAsWrapper<NetworkTimerWrapper>("Timer");
 
     // Connect C# events
     timer.Timeout += OnTimeout;
