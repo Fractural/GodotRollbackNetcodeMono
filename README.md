@@ -1,5 +1,10 @@
-Godot Rollback Netcode Mono 🔃
-==============================
+> [!Note]
+>
+> This addon is for Godot 3.x.
+>
+> Please check out the Godot 4.x branch for the 4.x version.
+
+# Godot Rollback Netcode Mono 🔃
 
 ![Deploy](https://github.com/Fractural/GodotRollbackNetcodeMono/actions/workflows/deploy.yml/badge.svg)
 
@@ -13,12 +18,12 @@ Once you're familiar with the plugin, check out the [Mono (C#) Support](#mono-c-
 
 1. Make sure the `godot-rollback-netcode` addon is installed. [See the original README for how to do that](ORIGINAL_README.md).
 1. Copy the `addons/GodotRollbackNetcodeMono` directory from this project into
-your Godot project *at the exact same path*.
+   your Godot project _at the exact same path_.
 
 ## Mono (C#) Support
 
-This addon features C# support primarily via wrapper classes that 
-wrap around the existing GDScript code. 
+This addon features C# support primarily via wrapper classes that
+wrap around the existing GDScript code.
 
 To enable mono support, add the `res://addons/GodotRollbackNetcodeMono/SyncMonoInit.cs` script as an
 autoload singleton in **Project** -> **Project settings...** and the "Autoload" tab.
@@ -29,14 +34,14 @@ To fetch GDScript nodes, you can use the `GetNodeAsWrapper` extension method pro
 
 ```CSharp
 // Tree Layout
-// 
+//
 // Root <- this C# script
 //  '- Timer <- NetworkTimer.gd
 //  '- SomeNode
 //     '- Rng <- NetworkRandomNumberGenerator.gd
 //     '- AnimationPlayer <- NetworkAnimationPlayer.gd
 
-public override _Ready() 
+public override _Ready()
 {
     NetworkTimer timer = this.GetNodeAsWrapper<NetworkTimer>("Timer");
     NetworkRandomNumberGenerator rng = this.GetNodeAsWrapper<NetworkRandomNumberGenerator>("SomeNode/Rng");
@@ -47,10 +52,10 @@ public override _Ready()
 Signals are forwarded to C# events, but you may also use the `Connect` method directly on the wrapper to connect to a signal on the GDScript node. Wrapper classes automatically forwards it's own `Connect` method to the GDScript node.
 
 ```CSharp
-public override _Ready() 
+public override _Ready()
 {
     NetworkTimer timer = this.GetNodeAsWrapper<NetworkTimer>("Timer");
-    
+
     // Connect C# events
     timer.Timeout += OnTimeout;
 
@@ -66,22 +71,23 @@ public override void _Notification(int what)
     }
 }
 
-public void OnTimeout() 
+public void OnTimeout()
 {
     GD.Print("Timed out!")
 }
 ```
 
-### Base Classes ###
+### Base Classes
 
 The addon features base classes that you can extend. These are `BaseNetworkAdaptor`, `BaseHashSerializer`, and `BaseMessageSerializer`. Once you extend a class, you can link them up like you normally would with GDScript NetworkAdaptors, HashSerializers, and MessageSerializers etc.
 
 For example you could make a `CustomMessageSerializer` like so
+
 ```CSharp
 // Stored in res://SomePath/To/CustomMessageSerializer.cs
 using GodotRollbackNetcode;
 
-public class CustomMessageSerializer : BaseMessageSerializer 
+public class CustomMessageSerializer : BaseMessageSerializer
 {
     private Dictionary<string, byte> inputPathMapping;
     private Dictionary<byte, string> inputPathMappingReverse;
@@ -122,7 +128,7 @@ public class CustomMessageSerializer : BaseMessageSerializer
             GDDictionary input = (GDDictionary)allInput[path];
             if (input.Contains("input_vector"))
                 header |= HeaderFlags.HAS_INPUT_VECTOR;
-              
+
             buffer.PutU8((byte)header);
 
             if (input.Contains("input_vector"))
@@ -167,7 +173,7 @@ public class CustomMessageSerializer : BaseMessageSerializer
 }
 ```
 
-and then go to **Projects** -> **Project Settings** -> **Network** -> **Rollback**, and replace `MessageSerializer` with the path to the C# class (ie. `res://SomePath/To/CustomMessageSerializer.cs`). 
+and then go to **Projects** -> **Project Settings** -> **Network** -> **Rollback**, and replace `MessageSerializer` with the path to the C# class (ie. `res://SomePath/To/CustomMessageSerializer.cs`).
 
 #### Custom MessageSerializer
 
@@ -181,7 +187,7 @@ public override byte[] SerializeInput(GDDictionary allInput)
     var buffer = new StreamPeerBuffer();
 
     buffer.Put32((int)allInput["$"]); // <- Put as signed 32-bit integer
-    
+
     ...
 }
 
@@ -205,17 +211,14 @@ public override GDDictionary UnserializeInput(byte[] serialized)
 
 This addons also comes with C# network nodes for RNG, timing, and animation playing.
 
-
-Logo credits
-------------
+## Logo credits
 
 The logo is composed of these images:
 
 - https://pxhere.com/en/photo/1451861 (License: CC0)
 - https://godotengine.org/press (License: CC-BY-4.0 by Andrea Calabró)
 
-License
--------
+## License
 
 Copyright 2021-2022 David Snopek.
 
