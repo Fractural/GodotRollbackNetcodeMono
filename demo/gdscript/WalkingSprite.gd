@@ -1,4 +1,4 @@
-class_name GDWalkingSprite
+class_name WalkingSprite
 extends Sprite2D
 
 @export var start_position: Vector2

@@ -5,10 +5,10 @@
 [ext_resource type="Script" path="res://demo/gdscript/IPLabel.gd" id="2_ew0b2"]
 [ext_resource type="Shader" path="res://assets/vignette.gdshader" id="2_ohjtp"]
 [ext_resource type="Shader" path="res://assets/bg_shader.gdshader" id="4_p7qrn"]
-[ext_resource type="Script" path="res://demo/mono/WalkingSpriteSpawner.cs" id="6"]
+[ext_resource type="Script" path="res://demo/mono/MonoWalkingSpriteSpawner.cs" id="6"]
 [ext_resource type="PackedScene" uid="uid://bogn6g5wby00g" path="res://addons/joystick/virtual_joystick.tscn" id="7"]
 [ext_resource type="Texture2D" uid="uid://bbkn4rlb7n4k3" path="res://assets/default_texture.tres" id="7_bumlb"]
-[ext_resource type="PackedScene" uid="uid://b66il36cndhjp" path="res://demo/mono/WalkingSprite.tscn" id="8"]
+[ext_resource type="PackedScene" uid="uid://b66il36cndhjp" path="res://demo/mono/MonoWalkingSprite.tscn" id="8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_21edt"]
 shader = ExtResource("2_ohjtp")
@@ -28,7 +28,7 @@ shader_parameter/stripe_bias = 2.0
 shader_parameter/speed = 5.0
 shader_parameter/angle = 0.785
 
-[node name="Main" type="Node" node_paths=PackedStringArray("mainMenu", "connectionPanel", "hostField", "portField", "messageLabel", "syncLostLabel", "serverPlayer", "clientPlayer", "resetButton", "localButton", "onlineButton")]
+[node name="MonoMain" type="Node" node_paths=PackedStringArray("mainMenu", "connectionPanel", "hostField", "portField", "messageLabel", "syncLostLabel", "serverPlayer", "clientPlayer", "serverButton", "clientButton", "resetButton", "localButton", "onlineButton")]
 script = ExtResource("1")
 mainMenu = NodePath("UI/MainMenu")
 connectionPanel = NodePath("UI/ConnectionPanel")
@@ -38,6 +38,8 @@ messageLabel = NodePath("UI/MarginContainer3/MessageLabel")
 syncLostLabel = NodePath("UI/MarginContainer3/SyncLostLabel")
 serverPlayer = NodePath("World/ServerPlayer")
 clientPlayer = NodePath("World/ClientPlayer")
+serverButton = NodePath("UI/ConnectionPanel/MarginContainer/GridContainer/ServerButton")
+clientButton = NodePath("UI/ConnectionPanel/MarginContainer/GridContainer/ClientButton")
 resetButton = NodePath("UI/MarginContainer/ResetButton")
 localButton = NodePath("UI/MainMenu/LocalButton")
 onlineButton = NodePath("UI/MainMenu/OnlineButton")

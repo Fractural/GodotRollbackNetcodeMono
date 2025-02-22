@@ -1,4 +1,4 @@
-class_name GDMain
+class_name Main
 extends Node
 
 const DummyNetworkAdaptor = preload("res://addons/godot-rollback-netcode/DummyNetworkAdaptor.gd")
@@ -9,8 +9,10 @@ const DummyNetworkAdaptor = preload("res://addons/godot-rollback-netcode/DummyNe
 @export var port_field: LineEdit
 @export var message_label: Label
 @export var sync_lost_label: Label
-@export var client_player: GDPlayer
-@export var server_player: GDPlayer
+@export var client_player: Player
+@export var server_player: Player
+@export var server_button: Button
+@export var client_button: Button
 @export var reset_button: Button
 @export var local_button: Button
 @export var online_button: Button
@@ -29,6 +31,8 @@ func _ready() -> void:
 	SyncManager.sync_regained.connect(_on_SyncManager_sync_regained)
 	SyncManager.sync_error.connect(_on_SyncManager_sync_error)
 	
+	server_button.pressed.connect(_on_ServerButton_pressed)
+	client_button.pressed.connect(_on_ClientButton_pressed)
 	local_button.pressed.connect(_on_LocalButton_pressed)
 	online_button.pressed.connect(_on_OnlineButton_pressed)
 	reset_button.pressed.connect(_on_ResetButton_pressed)

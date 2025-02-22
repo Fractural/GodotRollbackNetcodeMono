@@ -1,4 +1,4 @@
-class_name GDPlayer
+class_name Player
 extends Sprite2D
 
 @export var input_prefix: String = "player1_"

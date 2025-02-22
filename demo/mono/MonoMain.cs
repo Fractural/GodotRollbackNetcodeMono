@@ -18,6 +18,8 @@ namespace Game
         [Export] Label syncLostLabel;
         [Export] MonoPlayer serverPlayer;
         [Export] MonoPlayer clientPlayer;
+        [Export] Button serverButton;
+        [Export] Button clientButton;
         [Export] Button resetButton;
         [Export] Button localButton;
         [Export] Button onlineButton;
@@ -36,6 +38,8 @@ namespace Game
 
             syncLostLabel.Visible = false;
 
+            serverButton.Pressed += OnServerButtonPressed;
+            clientButton.Pressed += OnClientButtonPressed;
             localButton.Pressed += OnLocalButtonPressed;
             onlineButton.Pressed += OnOnlineButtonPressed;
             resetButton.Pressed += OnResetButtonPressed;

@@ -13,6 +13,8 @@ Please check out their repo for general instructions on how to install and use t
 
 Once you're familiar with the plugin, check out the [Mono (C#) Support](#mono-c-support) section to learn more about the C# support.
 
+![demo](./assets/screenshots/demo.gif)
+
 ## Installation
 
 1. Make sure the `godot-rollback-netcode` addon is installed. [See the original README for how to do that](ORIGINAL_README.md).

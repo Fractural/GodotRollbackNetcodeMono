@@ -28,7 +28,7 @@ shader_parameter/stripe_bias = 2.0
 shader_parameter/speed = 5.0
 shader_parameter/angle = 0.785
 
-[node name="Main" type="Node" node_paths=PackedStringArray("main_menu", "connection_panel", "host_field", "port_field", "message_label", "sync_lost_label", "client_player", "server_player", "reset_button", "local_button", "online_button")]
+[node name="Main" type="Node" node_paths=PackedStringArray("main_menu", "connection_panel", "host_field", "port_field", "message_label", "sync_lost_label", "client_player", "server_player", "server_button", "client_button", "reset_button", "local_button", "online_button")]
 script = ExtResource("1")
 main_menu = NodePath("UI/MainMenu")
 connection_panel = NodePath("UI/ConnectionPanel")
@@ -38,6 +38,8 @@ message_label = NodePath("UI/MarginContainer3/MessageLabel")
 sync_lost_label = NodePath("UI/MarginContainer3/SyncLostLabel")
 client_player = NodePath("World/ClientPlayer")
 server_player = NodePath("World/ServerPlayer")
+server_button = NodePath("UI/ConnectionPanel/MarginContainer/GridContainer/ServerButton")
+client_button = NodePath("UI/ConnectionPanel/MarginContainer/GridContainer/ClientButton")
 reset_button = NodePath("UI/MarginContainer/ResetButton")
 local_button = NodePath("UI/MainMenu/LocalButton")
 online_button = NodePath("UI/MainMenu/OnlineButton")

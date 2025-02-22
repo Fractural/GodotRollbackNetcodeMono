@@ -1,4 +1,4 @@
-class_name GDWalkingSpriteSpawner
+class_name WalkingSpriteSpawner
 extends Node2D
 
 @export var _walking_sprite_prefab: PackedScene
@@ -16,6 +16,6 @@ func _ready() -> void:
 		var direction = Vector2(rng.randf_range(-1, 1), rng.randf_range(-1, 1)).normalized()
 		var speed = rng.randf_range(speed_range.x, speed_range.y)
 		
-		var instance = _walking_sprite_prefab.instantiate() as GDWalkingSprite
+		var instance = _walking_sprite_prefab.instantiate() as WalkingSprite
 		add_child(instance)
 		instance.construct(pos, speed, direction)
