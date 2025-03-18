@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://teh77pd0ah27"]
 
-[ext_resource type="Script" path="res://addons/godot-rollback-netcode/log_inspector/ProgressDialog.gd" id="1"]
+[ext_resource type="Script" uid="uid://byb5mv61s1vsw" path="res://addons/godot-rollback-netcode/log_inspector/ProgressDialog.gd" id="1"]
 
 [node name="ProgressDialog" type="Popup"]
 visible = true

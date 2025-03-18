@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://d3aa0ihjfmkb8"]
 
-[ext_resource type="Script" path="res://addons/godot-rollback-netcode/log_inspector/FrameViewerSettingsDialog.gd" id="1"]
+[ext_resource type="Script" uid="uid://bdburf4f5ygsb" path="res://addons/godot-rollback-netcode/log_inspector/FrameViewerSettingsDialog.gd" id="1"]
 
 [node name="FrameViewerSettingsDialog" type="AcceptDialog"]
 title = "Frame Viewer Settings"

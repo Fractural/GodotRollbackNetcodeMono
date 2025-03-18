@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://vf3gjk5tt6ih"]
 
-[ext_resource type="Script" path="res://addons/godot-rollback-netcode/log_inspector/FrameDataGraph.gd" id="1"]
+[ext_resource type="Script" uid="uid://cdddtldd2cmcs" path="res://addons/godot-rollback-netcode/log_inspector/FrameDataGraph.gd" id="1"]
 [ext_resource type="PackedScene" path="res://addons/godot-rollback-netcode/log_inspector/FrameDataGraphCanvas.tscn" id="2"]
 
 [node name="FrameDataGraph" type="VBoxContainer"]
