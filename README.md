@@ -1,5 +1,5 @@
 > [!Note]
-> This addon is for Godot 4.x.
+> This addon is for Godot 4.4.
 >
 > Please check out the Godot 3.x branch for the 3.x version.
 
@@ -44,9 +44,9 @@ To fetch GDScript nodes, you can use the `GetNodeAsWrapper` extension method pro
 
 public override _Ready()
 {
-    NetworkTimerWrapper timer = this.GetNodeAsWrapper<NetworkTimerWrapper>("Timer");
-    NetworkRandomNumberGeneratorWrapper rng = this.GetNodeAsWrapper<NetworkRandomNumberGeneratorWrapper>("SomeNode/Rng");
-    NetworkAnimationPlayerWrapper animationPlayer = this.GetNodeAsWrapper<NetworkAnimationPlayerWrapper>("AnimationPlayer");
+	NetworkTimerWrapper timer = this.GetNodeAsWrapper<NetworkTimerWrapper>("Timer");
+	NetworkRandomNumberGeneratorWrapper rng = this.GetNodeAsWrapper<NetworkRandomNumberGeneratorWrapper>("SomeNode/Rng");
+	NetworkAnimationPlayerWrapper animationPlayer = this.GetNodeAsWrapper<NetworkAnimationPlayerWrapper>("AnimationPlayer");
 }
 ```
 
@@ -55,26 +55,26 @@ Signals are forwarded to C# events, but you may also use the `Connect` method di
 ```CSharp
 public override _Ready()
 {
-    NetworkTimerWrapper timer = this.GetNodeAsWrapper<NetworkTimerWrapper>("Timer");
+	NetworkTimerWrapper timer = this.GetNodeAsWrapper<NetworkTimerWrapper>("Timer");
 
-    // Connect C# events
-    timer.Timeout += OnTimeout;
+	// Connect C# events
+	timer.Timeout += OnTimeout;
 
-    // Connect Signals
-    timer.Connect("timeout", this, nameof(OnTimeout));
+	// Connect Signals
+	timer.Connect("timeout", this, nameof(OnTimeout));
 }
 
 public override void _Notification(int what)
 {
-    if (what == NotificationPredelete)
-    {
-        timer.Timeout -= OnTimeout; // Don't forget to unsubscribe C# events
-    }
+	if (what == NotificationPredelete)
+	{
+		timer.Timeout -= OnTimeout; // Don't forget to unsubscribe C# events
+	}
 }
 
 public void OnTimeout()
 {
-    GD.Print("Timed out!")
+	GD.Print("Timed out!")
 }
 ```
 
@@ -90,87 +90,87 @@ using GodotRollbackNetcode;
 
 public class CustomMessageSerializer : BaseMessageSerializer
 {
-    private Dictionary<string, byte> inputPathMapping;
-    private Dictionary<byte, string> inputPathMappingReverse;
+	private Dictionary<string, byte> inputPathMapping;
+	private Dictionary<byte, string> inputPathMappingReverse;
 
-    [Flags]
-    public enum HeaderFlags
-    {
-        NONE = 0,
-        HAS_INPUT_VECTOR = 1
-    }
+	[Flags]
+	public enum HeaderFlags
+	{
+		NONE = 0,
+		HAS_INPUT_VECTOR = 1
+	}
 
-    public CSharpMessageSerializer()
-    {
-        inputPathMapping = new Dictionary<string, byte>();
-        inputPathMapping["/root/Main/ServerPlayer"] = 1;
-        inputPathMapping["/root/Main/ClientPlayer"] = 2;
+	public CSharpMessageSerializer()
+	{
+		inputPathMapping = new Dictionary<string, byte>();
+		inputPathMapping["/root/Main/ServerPlayer"] = 1;
+		inputPathMapping["/root/Main/ClientPlayer"] = 2;
 
-        inputPathMappingReverse = inputPathMapping.ToDictionary((i) => i.Value, (i) => i.Key);
-    }
+		inputPathMappingReverse = inputPathMapping.ToDictionary((i) => i.Value, (i) => i.Key);
+	}
 
-    public override byte[] SerializeInput(GDDictionary allInput)
-    {
-        var buffer = new StreamPeerBuffer();
-        buffer.Resize(16);
+	public override byte[] SerializeInput(GDDictionary allInput)
+	{
+		var buffer = new StreamPeerBuffer();
+		buffer.Resize(16);
 
-        buffer.Put32((int)allInput["$"]);
-        buffer.PutU8(Convert.ToByte(allInput.Count - 1));
+		buffer.Put32((int)allInput["$"]);
+		buffer.PutU8(Convert.ToByte(allInput.Count - 1));
 
-        var sortedKeys = allInput.Keys.OfType<string>().OrderBy((key) => key);
-        foreach (string path in sortedKeys)
-        {
-            if (path == "$")
-                continue;
-            buffer.PutU8(inputPathMapping[path]);
+		var sortedKeys = allInput.Keys.OfType<string>().OrderBy((key) => key);
+		foreach (string path in sortedKeys)
+		{
+			if (path == "$")
+				continue;
+			buffer.PutU8(inputPathMapping[path]);
 
-            HeaderFlags header = HeaderFlags.NONE;
+			HeaderFlags header = HeaderFlags.NONE;
 
-            GDDictionary input = (GDDictionary)allInput[path];
-            if (input.Contains("input_vector"))
-                header |= HeaderFlags.HAS_INPUT_VECTOR;
+			GDDictionary input = (GDDictionary)allInput[path];
+			if (input.Contains("input_vector"))
+				header |= HeaderFlags.HAS_INPUT_VECTOR;
 
-            buffer.PutU8((byte)header);
+			buffer.PutU8((byte)header);
 
-            if (input.Contains("input_vector"))
-            {
-                Vector2 inputVector = (Vector2)input["input_vector"];
-                buffer.PutFloat(inputVector.x);
-                buffer.PutFloat(inputVector.y);
-            }
-        }
-        buffer.Resize(buffer.GetPosition());
-        return buffer.DataArray;
-    }
+			if (input.Contains("input_vector"))
+			{
+				Vector2 inputVector = (Vector2)input["input_vector"];
+				buffer.PutFloat(inputVector.x);
+				buffer.PutFloat(inputVector.y);
+			}
+		}
+		buffer.Resize(buffer.GetPosition());
+		return buffer.DataArray;
+	}
 
-    public override GDDictionary UnserializeInput(byte[] serialized)
-    {
-        var buffer = new StreamPeerBuffer();
-        buffer.PutData(serialized);
-        buffer.Seek(0);
+	public override GDDictionary UnserializeInput(byte[] serialized)
+	{
+		var buffer = new StreamPeerBuffer();
+		buffer.PutData(serialized);
+		buffer.Seek(0);
 
-        GDDictionary allInput = new GDDictionary();
+		GDDictionary allInput = new GDDictionary();
 
-        allInput["$"] = buffer.GetU32();
+		allInput["$"] = buffer.GetU32();
 
-        var inputCount = buffer.GetU8();
-        if (inputCount == 0)
-            return allInput;
+		var inputCount = buffer.GetU8();
+		if (inputCount == 0)
+			return allInput;
 
-        for (int i = 0; i < inputCount; i++)
-        {
-            string path = inputPathMappingReverse[buffer.GetU8()];
-            GDDictionary input = new GDDictionary();
-            HeaderFlags header = (HeaderFlags)buffer.GetU8();
+		for (int i = 0; i < inputCount; i++)
+		{
+			string path = inputPathMappingReverse[buffer.GetU8()];
+			GDDictionary input = new GDDictionary();
+			HeaderFlags header = (HeaderFlags)buffer.GetU8();
 
-            if (header.HasFlag(HeaderFlags.HAS_INPUT_VECTOR))
-                input["input_vector"] = new Vector2(buffer.GetFloat(), buffer.GetFloat());
+			if (header.HasFlag(HeaderFlags.HAS_INPUT_VECTOR))
+				input["input_vector"] = new Vector2(buffer.GetFloat(), buffer.GetFloat());
 
-            allInput[path] = input;
-        }
+			allInput[path] = input;
+		}
 
-        return allInput;
-    }
+		return allInput;
+	}
 }
 ```
 
@@ -185,24 +185,24 @@ If you are using StreamPeerBuffer to serialize and deserialize your input, you w
 ```CSharp
 public override byte[] SerializeInput(GDDictionary allInput)
 {
-    var buffer = new StreamPeerBuffer();
+	var buffer = new StreamPeerBuffer();
 
-    buffer.Put32((int)allInput["$"]); // <- Put as signed 32-bit integer
+	buffer.Put32((int)allInput["$"]); // <- Put as signed 32-bit integer
 
-    ...
+	...
 }
 
 public override GDDictionary UnserializeInput(byte[] serialized)
 {
-    var buffer = new StreamPeerBuffer();
-    buffer.PutData(serialized);
-    buffer.Seek(0);
+	var buffer = new StreamPeerBuffer();
+	buffer.PutData(serialized);
+	buffer.Seek(0);
 
-    GDDictionary allInput = new GDDictionary();
+	GDDictionary allInput = new GDDictionary();
 
-    allInput["$"] = buffer.GetU32(); // <- Retreive as unsigned 32-bit integer
+	allInput["$"] = buffer.GetU32(); // <- Retreive as unsigned 32-bit integer
 
-    ...
+	...
 }
 ```
 

@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://dsud2u0uhwn4m"]
 
 [ext_resource type="PackedScene" uid="uid://teh77pd0ah27" path="res://addons/godot-rollback-netcode/log_inspector/ProgressDialog.tscn" id="1"]
-[ext_resource type="Script" path="res://addons/godot-rollback-netcode/log_inspector/LogInspector.gd" id="2"]
+[ext_resource type="Script" uid="uid://2i3wrqi63dfl" path="res://addons/godot-rollback-netcode/log_inspector/LogInspector.gd" id="2"]
 [ext_resource type="PackedScene" path="res://addons/godot-rollback-netcode/log_inspector/StateInputViewer.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://58hro2kq3tlw" path="res://addons/godot-rollback-netcode/log_inspector/FrameViewer.tscn" id="4"]
-[ext_resource type="Script" path="res://addons/godot-rollback-netcode/log_inspector/ReplayServer.gd" id="5"]
+[ext_resource type="Script" uid="uid://bgr7pa6v0fkw2" path="res://addons/godot-rollback-netcode/log_inspector/ReplayServer.gd" id="5"]
 
 [node name="LogInspector" type="AcceptDialog"]
 title = "Log Inspector"

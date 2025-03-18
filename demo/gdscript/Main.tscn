@@ -1,12 +1,12 @@
 [gd_scene load_steps=12 format=3 uid="uid://bkjmj81wycs66"]
 
-[ext_resource type="Script" path="res://demo/gdscript/Main.gd" id="1"]
+[ext_resource type="Script" uid="uid://cuaaymhpsp1li" path="res://demo/gdscript/Main.gd" id="1"]
 [ext_resource type="PackedScene" path="res://demo/gdscript/Player.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://bogn6g5wby00g" path="res://addons/joystick/virtual_joystick.tscn" id="3_2owxp"]
-[ext_resource type="Script" path="res://demo/gdscript/IPLabel.gd" id="3_givab"]
-[ext_resource type="Shader" path="res://assets/bg_shader.gdshader" id="4_1oovr"]
-[ext_resource type="Shader" path="res://assets/vignette.gdshader" id="4_3cum6"]
-[ext_resource type="Script" path="res://demo/gdscript/WalkingSpriteSpawner.gd" id="4_qn0g1"]
+[ext_resource type="Script" uid="uid://cut02rbxxmmsk" path="res://demo/gdscript/IPLabel.gd" id="3_givab"]
+[ext_resource type="Shader" uid="uid://bwhd3mia7jjc3" path="res://assets/bg_shader.gdshader" id="4_1oovr"]
+[ext_resource type="Shader" uid="uid://3un5gjyaskts" path="res://assets/vignette.gdshader" id="4_3cum6"]
+[ext_resource type="Script" uid="uid://bnovfrttmq3ja" path="res://demo/gdscript/WalkingSpriteSpawner.gd" id="4_qn0g1"]
 [ext_resource type="PackedScene" uid="uid://bwsqtcs3sj1hq" path="res://demo/gdscript/WalkingSprite.tscn" id="5_b8rir"]
 [ext_resource type="Texture2D" uid="uid://bbkn4rlb7n4k3" path="res://assets/default_texture.tres" id="5_bm1lk"]
 
